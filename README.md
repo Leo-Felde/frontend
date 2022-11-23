@@ -1,24 +1,15 @@
-# frontend
+Bom dia, esse é o front-end do TCC
 
-## Project setup
+Pra rodar vai precisar do node e vue
+
+## Comandinhos
+
+Quando fazer o clone do repo só abrir um cmd na pasta e rodar esse comandinho pra baixar os pacotes
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+Pra rodar o front precisa abrir um cmd na pasta e roda esse comando
 ```
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
