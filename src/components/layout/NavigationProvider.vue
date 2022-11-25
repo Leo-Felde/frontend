@@ -29,7 +29,7 @@
     </v-navigation-drawer>
 
     <!-- navegação mobile -->
-    <v-bottom-navigation v-else v-model="tab" color="primary">
+    <v-bottom-navigation v-else v-model="tab" color="primary" fixed class="pixel-card-top pt-4">
       <v-btn value="avatar" to="/character">
         <v-icon> mdi-human-male-height </v-icon>
       </v-btn>

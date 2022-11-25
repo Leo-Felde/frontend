@@ -50,6 +50,8 @@ export default {
 </Script>
 
 <style lang="sass">
+@import './styles/main.sass'
+
 #view-box
   height: 100%
 #app
@@ -66,4 +68,6 @@ a
 
   &.router-link-exact-active
     color: #42b983
+
+
 </style>

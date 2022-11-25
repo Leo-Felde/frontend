@@ -9,7 +9,7 @@
       </v-row>
       <v-divider class="my-2"/>
       <v-row cols="12">
-        <v-col cols="12" sm="3" v-for="i in 12" :key="i">
+        <v-col cols="4" v-for="i in 12" :key="i">
           <v-card class="grey lighten-3 d-flex" elevation="0" height="50px">
             <span class="ma-auto caption grey--text"> item </span>
           </v-card>
