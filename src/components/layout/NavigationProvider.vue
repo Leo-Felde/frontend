@@ -29,21 +29,24 @@
     </v-navigation-drawer>
 
     <!-- navegação mobile -->
-    <v-bottom-navigation v-else v-model="tab" color="primary" fixed class="pixel-card-top pt-4">
+    <v-bottom-navigation v-else v-model="tab" color="primary" fixed id="navigation">
+      <v-img src="@/assets/img/navdeco1.svg" id="nav-deco-middle" />
+      <v-img :src="require(`@/assets/img/navdecocorner.svg`)" v-for="n in 4" :key="n" :id="`corner-deco-${n}`" />
+
       <v-btn value="avatar" to="/character">
-        <v-icon> mdi-human-male-height </v-icon>
+        <v-icon color="#bbb6c4"> mdi-human-male-height </v-icon>
       </v-btn>
       <v-btn value="stats" to="/stats">
-        <v-icon> mdi-chart-bar </v-icon>
+        <v-icon color="#bbb6c4"> mdi-chart-bar </v-icon>
       </v-btn>
-      <v-btn value="home" to="/home">
-        <v-icon> mdi-view-dashboard-outline </v-icon>
+      <v-btn value="home" to="/home" id="main-nav">
+        <v-icon color="#bbb6c4" large> mdi-view-dashboard-outline </v-icon>
       </v-btn>
       <v-btn value="tasks" to="/tasks">
-        <v-icon> mdi-format-list-checkbox </v-icon>
+        <v-icon color="#bbb6c4"> mdi-format-list-checkbox </v-icon>
       </v-btn>
       <v-btn value="shop" to="/shop">
-        <v-icon> mdi-basket </v-icon>
+        <v-icon color="#bbb6c4"> mdi-basket </v-icon>
       </v-btn>
     </v-bottom-navigation>
   </div>
@@ -78,6 +81,40 @@ export default {
 }
 </Script>
 
-<style lang="sass">
+<style lang="sass" scoped>
+#navigation
+  background: #353540
+  outline: 3px solid white !important
+  
+#nav-deco-middle
+  position: absolute
+  width: 55px
+  top: -17px
 
+#corner-deco
+  position: absolute
+  height: 10px
+  width: 10px
+  &-1
+    @extend #corner-deco
+    left: 5px
+    top: 5px
+  &-2
+    @extend #corner-deco
+    right: 5px
+    top: 5px
+    -webkit-transform: scaleX(-1)
+    transform: scaleX(-1)
+  &-3
+    @extend #corner-deco
+    left: 5px
+    bottom: 5px
+    -webkit-transform: scaleX(-1) rotate(180deg)
+    transform: scaleX(-1) rotate(180deg)
+  &-4
+    @extend #corner-deco
+    right: 5px
+    bottom: 5px
+    -webkit-transform: rotate(180deg)
+    transform: rotate(180deg)
 </style>
