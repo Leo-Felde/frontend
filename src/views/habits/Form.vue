@@ -1,8 +1,8 @@
 <template>
     <div>
       <v-dialog v-model="show" fullscreen>
-        <v-card class="pixel-card">
-          <StylizedCard black class="d-flex mb-1" height="50px">
+        <StylizedCard content-class="habit-wrapper" paper>
+          <StylizedCard black class="d-flex mb-1 card-title" height="50px">
             <span class="ml-5 my-auto"> Criar novo hábito </span>
             <v-btn icon class="ml-auto my-auto mr-2" @click="cancelarAdicionarHabito">
               <v-icon color="white">mdi-close</v-icon>
@@ -13,16 +13,15 @@
           <span class="align-start"> Título </span>
           <v-row no-gutters class="mx-8 mt-1">
             <v-col>
-              <v-text-field v-model="form.title" solo class="stylized-tf"/>
+              <TextField v-model="form.titulo"/>
             </v-col>
           </v-row>
 
           <span class="subtitle"> Cor </span> 
-          <v-row no-gutters class="mx-1">
-            <div id="color-container" class="my-2 pixel-card-light mx-3">
+
+          <StylizedCard paper-light no-borders content-class="mx-2" id="color-container">
               <v-btn class="mx-1" v-for="color in allColors" :key="color" fab large :color="color" elevation="0" @click="pickColor(color)"/>
-            </div>
-          </v-row>
+          </StylizedCard>
 
           <span class="align-start"> Ícone </span>
           <v-row no-gutters class="mx-8">
@@ -38,20 +37,35 @@
           <span class="align-start"> Frequência </span>
           <v-row no-gutters class="mx-8">
             <v-col class="d-flex-column">
-              <v-card v-for="dia in dias" :key="dia" class="pixel-card-alternate my-2">
-                {{ dia }}
+              <v-card v-for="dia in dias" :key="dia.id" class="pixel-card-alternate my-2 dia-card" @click="dia.value = !dia.value">
+                <v-icon color="green" v-if="dia.value"> mdi-check-bold </v-icon> 
+                {{ dia.text }}
               </v-card>
             </v-col>
           </v-row>
           
           <v-divider class="my-3"/>
+          <span class="align-start"> Período </span>
+          <v-row no-gutters class="mx-8">
+            <v-btn-toggle
+              v-model="form.period"
+              mandatory
+            >
+              <v-btn v-for="item in perido" outlined :key="item.id" class="my-2">
+                <v-icon> {{ item.icon }}</v-icon> 
+                {{ item.text }}
+              </v-btn>
+            </v-btn-toggle>
+          </v-row>
+
+
           <v-btn block @click="adicionarHabito" text> adicionar hábito </v-btn>
           <v-btn text @click="cancelarAdicionarHabito" class="mt-2"> cancelar </v-btn>
-        </v-card>
+        </StylizedCard>
       </v-dialog>
 
-      <v-dialog v-if="show" v-model="iconPicker" fullscreen>
-        <v-card>
+      <v-dialog v-if="show" v-model="iconPicker">
+        <StylizedCard class="pa-4" paper>
           <v-card-title class="justify-between">
             <span> Ícone </span>
             <v-btn icon class="ml-auto" @click="iconPicker = false">
@@ -74,7 +88,7 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
-        </v-card>
+        </StylizedCard>
       </v-dialog>
     </div>
 </template>
@@ -106,7 +120,21 @@ export default {
         'mdi-face-man', 'mdi-face-man-shimmer', 'mdi-face-woman', 'mdi-face-woman-shimmer'] },    
       { category: 'Médico', icons: ['mdi-clipboard-pulse', 'mdi-heart-pulse', 'mdi-pulse', 'mdi-stethoscope', 'mdi-hand-wash', 'mdi-lotion', 'mdi-brain', 'mdi-tooth', 'mdi-lungs', 'mdi-medication', 'mdi-needle', 'mdi-pill', 'mdi-emoticon-sick'] },
     ],
-    dias: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado']
+    dias: [
+      {id: 'domingo', text: 'Domingo', value: true},
+      {id: 'segunda', text: 'Segunda-feira', value: true},
+      {id: 'terca', text: 'Terça-feira', value: true},
+      {id: 'quarta',text: 'Quarta-feira', value: true},
+      {id: 'quinta',text: 'Quinta-feira', value: true},
+      {id: 'sexta',text: 'Sexta-feira', value: true},
+      {id: 'sabado',text: 'Sábado', value: true}
+    ],
+    perido: [
+      {id: 'manha', text: 'manhã', icon: 'mdi-weather-sunset', value: 'manha'},
+      {id: 'dia', text: 'Dia', icon: 'mdi-weather-sunny', value: 'dia'},
+      {id: 'noite', text: 'Noite', icon: 'mdi-weather-night', value: 'noite'},
+      {id: 'qqr',text: 'qualquer', icon: 'mdi-theme-light-dark', value: 'qqr'},
+    ]
   }),
 
   props: {
@@ -145,6 +173,16 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+::v-deep
+  .v-dialog
+    overflow-x: hidden !important
+
+.card-title
+  position: fixed
+  width: 100%
+  top: 0px
+  z-index: 1
+
 #color-container
   display: flex
   max-width: inherit
@@ -163,4 +201,13 @@ export default {
     text-transform: capitalize !important
   &-progress
     position: absolute
+
+.dia-card
+  user-select: none
+  .v-icon
+    position: absolute
+    left: 10px
+
+.habit-wrapper
+  margin-top: 50px !important
 </style>

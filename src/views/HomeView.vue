@@ -1,6 +1,5 @@
 <template>
-  <v-card class="pa-4 ma-3 pixel-card">
-    <v-img src="@/assets/img/mborder-1.svg" v-for="n in 4" :key="n" :id="`border-deco-${n}`" />
+  <StylizedCard class="pa-4 ma-3" paper>
     <v-card-title class="justify-center"> Hábitos </v-card-title>
     <div class="py-2" id="habits-container">
       <v-btn fab class="mx-2" elevation="0" @click="showNewHabitDialog = true"> 
@@ -20,7 +19,7 @@
       <TaskList :items="tasks" />
 
       <HabitForm v-model="showNewHabitDialog" @newHabit="adicionarHabito" />
-    </v-card>
+    </StylizedCard>
 </template>
 
 <script>
