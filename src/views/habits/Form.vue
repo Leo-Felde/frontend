@@ -1,7 +1,7 @@
 <template>
     <div>
       <v-dialog v-model="show" fullscreen>
-        <StylizedCard content-class="habit-wrapper" paper>
+      <StylizedCard content-class="habit-wrapper" brown>
           <StylizedCard black class="d-flex mb-1 card-title" height="50px">
             <span class="ml-5 my-auto"> Criar novo hábito </span>
             <v-btn icon class="ml-auto my-auto mr-2" @click="cancelarAdicionarHabito">
@@ -19,14 +19,14 @@
 
           <span class="subtitle"> Cor </span> 
 
-          <StylizedCard paper-light no-borders content-class="mx-2" id="color-container">
-              <v-btn class="mx-1" v-for="color in allColors" :key="color" fab large :color="color" elevation="0" @click="pickColor(color)"/>
+          <StylizedCard brown-light no-borders content-class="mx-2" id="color-container">
+              <v-btn class="mx-1 darken-2" v-for="color in allColors" :key="color" fab large :color="color" elevation="0" @click="pickColor(color)"/>
           </StylizedCard>
 
           <span class="align-start"> Ícone </span>
           <v-row no-gutters class="mx-8">
             <v-col>
-              <v-btn id="pick-icon" fab class="mx-1" elevation="0" :color="form.color || 'grey'" @click="iconPicker = true">
+              <v-btn id="pick-icon" fab class="mx-1 darken-2" elevation="0" :color="form.color || 'grey'" @click="iconPicker = true">
                 <v-progress-circular class="habit-progress" size="80" />
                 <v-icon color="white" large v-if="form.icon">{{ form.icon }}</v-icon> 
                 <span v-else class="habit-select-caption caption white--text"> escolher </span>
@@ -65,7 +65,7 @@
       </v-dialog>
 
       <v-dialog v-if="show" v-model="iconPicker">
-        <StylizedCard class="pa-4" paper>
+        <StylizedCard class="pa-4" brown>
           <v-card-title class="justify-between">
             <span> Ícone </span>
             <v-btn icon class="ml-auto" @click="iconPicker = false">
@@ -82,7 +82,7 @@
                 {{ item.category }}
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                <v-btn fab class="ma-1" elevation="0" v-for="icon in item.icons" :key="icon" :color="form.color" @click="pickIcon(icon)"> 
+                <v-btn fab class="ma-1 darken-2" elevation="0" v-for="icon in item.icons" :key="icon" :color="form.color" @click="pickIcon(icon)"> 
                   <v-icon :color="form.color ? 'white' : 'black'"> {{ icon }} </v-icon> 
                 </v-btn>
               </v-expansion-panel-content>
@@ -94,15 +94,10 @@
 </template>
 
 <script>
-import StylizedCard from '@/components/layout/StylizedCard.vue'
 
 export default {
   name: 'HabitsDialog',
   
-  components: {
-    StylizedCard
-  },
-
   data: () => ({
     show: false,
     iconPicker: false,

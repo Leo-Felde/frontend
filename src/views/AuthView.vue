@@ -1,24 +1,30 @@
 <template>
-  <v-card class="ma-auto px-10 py-4" width="22%">
+  <StylizedCard brown content-class="mx-5 mt-auto my-auto pa-6 login-wrapper" width="300px">
 
     <v-row cols="12" no-gutters>
         <v-col cols="12" lg="12">
-            <v-text-field label="email" outlined dense />
+            <TextField dense label="email" outlined />
         </v-col>
         <v-col cols="12" lg="12">
-            <v-text-field label="senha" outlined dense />
+            <TextField dense label="senha" outlined @click="authenticate" :loading="loadin" />
         </v-col>
     </v-row>
-    <v-btn color="primary" block class="mb-1" @click="authenticate" :loading="loading"> Entrar </v-btn>
+    <BlackButton block />
+    <!-- <v-btn color="primary" block class="mb-1" @click="authenticate" :loading="loading"> Entrar </v-btn> -->
     <v-btn text small> esqueceu a senha? </v-btn>
     <v-divider class="mt-2 mb-4"/>
     <v-btn color="green" class="white--text"> Criar conta </v-btn>
-  </v-card>
+  </StylizedCard>
 </template>
 
 <script>
-export default {
+import BlackButton from '@/components/BlackButton.vue'
+
+export default {  
   name: 'LoginAuth',
+  components: {
+    BlackButton
+  },
 
   data: () => ({ loading: false }),
 
@@ -36,6 +42,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="sass">
+.login-wrapper
+  top: 25%
 
 </style>

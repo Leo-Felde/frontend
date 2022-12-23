@@ -1,5 +1,12 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+    <StylizedCard paper color="yellow" class="ma-4" height="200">
+      OI OI OI
+    </StylizedCard>
 </template>
+
+<script>
+
+export default {  
+  name: 'AboutPage'
+}
+</script>

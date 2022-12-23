@@ -1,12 +1,13 @@
 <template>
-  <StylizedCard class="pa-4 ma-3" paper>
+  <StylizedCard class="pa-2 ma-3" brown>
     <v-card-title class="justify-center"> Hábitos </v-card-title>
     <div class="py-2" id="habits-container">
       <v-btn fab class="mx-2" elevation="0" @click="showNewHabitDialog = true"> 
         <v-icon color="light-green darken-2">mdi-plus</v-icon> 
       </v-btn>
+      
       <div v-for="item in habits" :key="item.id" class="habit-container">
-        <v-btn fab class="mx-2" elevation="0" :color="item.color" long-press="500" @touchstart="touchStart(item)" @touchend="touchEnd(item)">
+        <v-btn fab class="mx-2 darken-2" elevation="0" :color="item.color" long-press="500" @touchstart="touchStart(item)" @touchend="touchEnd(item)">
           <v-progress-circular :value="item.value" :color="`${item.color} lighten-2`" class="habit-progress" size="60" />
           <v-icon color="white">{{ item.icon }}</v-icon> 
         </v-btn>
@@ -15,8 +16,8 @@
     </div>
     <v-divider class="my-2"/>
 
-      <v-card-title class="justify-center pb-0"> Quests </v-card-title>
-      <TaskList :items="tasks" />
+      <v-card-subtitle class="justify-center pb-0"> Missões ativas </v-card-subtitle>
+      <QuestList :items="tasks" />
 
       <HabitForm v-model="showNewHabitDialog" @newHabit="adicionarHabito" />
     </StylizedCard>
@@ -24,7 +25,7 @@
 
 <script>
 // @ is an alias to /src
-import TaskList from '@/components/QuestList.vue'
+import QuestList from '@/components/QuestList.vue'
 import HabitForm from './habits/Form.vue'
 
 export default {
@@ -38,7 +39,7 @@ export default {
   }),
 
   components: {
-    TaskList,
+    QuestList,
     HabitForm
   },
 

@@ -3,9 +3,9 @@
         <v-list-item
         v-for="task in items"
         :key="task.id"
-        :class="`quest-item-${task.color} my-2 py-0`"
+        class="my-2"
         >
-            <v-img :src="require(`@/assets/img/${task.color}border.svg`)" v-for="n in 4" :key="n" :id="`sm-border-deco-${n}`" />
+        <StylizedCard paper :color="task.color" content-class="d-flex px-2" width="100%" :no-deco="false">
             <v-list-item-avatar>
                 <v-icon>
                     {{ task.icon }}
@@ -18,8 +18,9 @@
 
             <v-list-item-action>
                 <span class="green--text" v-if="task.xp">+{{ task.xp }}xp</span>
-                <span class="orange--text" v-if="task.money"> {{ task.money }}<v-icon color="orange"> mdi-circle-multiple </v-icon></span>
+                <span class="orange--text text--accent-2" v-if="task.money"> {{ task.money }}<v-icon color="orange accent-2"> mdi-circle-multiple </v-icon></span>
             </v-list-item-action>
+        </StylizedCard>
         </v-list-item>
     </v-list>
 </template>
@@ -37,9 +38,3 @@ export default {
   }
 }
 </script>
-
-<style lang="sass" scoped>
-::v-deep
-    .v-list-item
-        background: #fbf2eb
-</style>
