@@ -54,6 +54,8 @@ export default {
 
 #view-box
   height: 100%
+  margin-bottom: 56px
+  max-height: calc(100vh - 56px)
 #app
   font-family: Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased

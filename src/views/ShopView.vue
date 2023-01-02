@@ -1,5 +1,5 @@
 <template>
-    <StylizedCard brown class="pa-2 ma-3">
+    <StylizedCard brown class="pa-2 ma-2">
       <v-card-title class="justify-center"> Lojinha </v-card-title>
       <v-row cols="12">
         <v-col cols="4">
@@ -49,11 +49,9 @@ export default {
   data: () => ({
     tab: 0,
     tabs: [
-      { icon: 'mdi-sword' },
-      { icon: 'mdi-tshirt-crew' },
-      { icon: 'mdi-redhat' },
-      { icon: 'mdi-bottle-tonic-plus' },
-      { icon: 'mdi-paw' }
+      { icon: 'weapons' },
+      { icon: 'armor-boots' },
+      { icon: 'potions' }
     ]
   }),
   methods: {

@@ -14,9 +14,14 @@
     <slot />
   </v-card>
 
+  <v-card v-else-if="brownDark" :class="`brownDark ${contentClass}`" tile :height="height" :width="width">
+    <div v-show="!noBorders" v-for="n in 4" :key="n" :id="`dbrown-border-deco-${n}`" />
+    <slot />
+  </v-card>
+
   <v-card v-else-if="paper" :class="`${color ? `paper-${color}` : 'paper'} ${contentClass}`" tile :height="height" :width="width">
     <div v-show="!noBorders" v-for="n in 4" :key="n" :id="`paper-border-deco-${n}`" />
-    <div v-show="!noDeco" v-for="n in 2" :key="n" :id="`paper-inner-deco-${n}`"/>
+    <div v-show="!noDeco" v-for="n in 2" :key="`inner-${n}`" :id="`paper-inner-deco-${n}`"/>
     <slot />
   </v-card>
 
@@ -32,6 +37,7 @@ export default {
     black: Boolean,
     brown: Boolean,
     brownLight: Boolean,
+    brownDark: Boolean,
     paper: Boolean,
     noBorders: Boolean,
     noDeco: { type: Boolean, default: true },
@@ -223,4 +229,39 @@ export default {
       bottom: $height
       -webkit-transform: scaleX(-1) rotate(180deg)
       transform: scaleX(-1) rotate(180deg)
+
+.v-card.brownDark
+  background-color: rgb(176, 151, 130)
+  box-shadow: 0px 3px 0px rgb(170, 144, 122) inset, 0 3px 5px -1px rgba(0,0,0,.2),0 5px 8px 0 rgba(0,0,0,.14),0 1px 14px 0 rgba(0,0,0,.12) !important
+  border: 3px solid rgb(157, 128, 103)
+#dbrown-border-deco
+  position: absolute
+  box-shadow: 3px 3px 0 0 rgb(126,103,76), 6px 3px 0 0 rgb(126,103,76), 9px 3px 0 0 rgb(126,103,76), 3px 6px 0 0 rgb(126,103,76), 3px 9px 0 0 rgb(126,103,76)
+  height: 3px 
+  width: 3px
+  $position: 6px
+  height: 3px
+  width: 3px
+  &-1
+    @extend #dbrown-border-deco
+    left: -$position
+    top: -$position
+  &-2
+    @extend #dbrown-border-deco
+    top: -$position
+    right: -$position
+    -webkit-transform: scaleX(-1)
+    transform: scaleX(-1)
+  &-3
+    @extend #dbrown-border-deco
+    bottom: -$position
+    left: -$position
+    -webkit-transform: scaleX(-1) rotate(180deg)
+    transform: scaleX(-1) rotate(180deg)
+  &-4
+    @extend #dbrown-border-deco
+    bottom: -$position
+    right: -$position
+    -webkit-transform: rotate(180deg)
+    transform: rotate(180deg)
 </style>

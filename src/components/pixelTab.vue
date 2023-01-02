@@ -4,15 +4,15 @@
       <v-tab v-for="tab in items" :key="tab" class="mx-2">
         <div v-for="i in 4" :key="i" :class="`big-pixel-tab-deco-${i}`"/>
         <span v-if= "tab.title"> {{ tab.title }} </span>
-        <v-icon v-if="tab.icon"> {{ tab.icon }} </v-icon>
+        <v-icon v-if="tab.icon" :icon="tab.icon" />
       </v-tab>
     </v-tabs>
 
     <v-tabs v-else v-model="tab" :show-arrows="false" :class="`pixel-tabs ${contentClass}`">
-      <v-tab v-for="tab in items" :key="tab" class="mx-1">
+      <v-tab v-for="tab in items" :key="tab.title" class="mx-1">
         <div v-for="i in 4" :key="i" :class="`pixel-tab-deco-${i}`"/>
         <span v-if= "tab.title"> {{ tab.title }} </span>
-        <v-icon v-if="tab.icon"> {{ tab.icon }} </v-icon>
+        <PixelIcon v-if="tab.icon" :icon="tab.icon" />
       </v-tab>
     </v-tabs>
   </div>
@@ -47,13 +47,11 @@ export default {
 
 <style lang="sass" scoped>
 @mixin shadow-color($color)
-  // box-shadow: 3px 3px 0 0 #{$color}, 6px 3px 0 0 #{$color}, 9px 3px 0 0 #{$color}, 3px 6px 0 0 #{$color}, 9px 6px 0 0 #{$color}, 3px 9px 0 0 #{$color}, 6px 9px 0 0 #{$color}
   box-shadow: 6px 3px 0 0 #{$color}, 9px 3px 0 0 #{$color}, 12px 3px 0 0 #{$color}, 15px 3px 0 0 #{$color}, 18px 3px 0 0 #{$color}, 3px 6px 0 0 #{$color}, 6px 6px 0 0 #{$color}, 3px 9px 0 0 #{$color}, 3px 12px 0 0 #{$color}, 3px 15px 0 0 #{$color}, 3px 18px 0 0 #{$color}
   height: 3px 
   width: 3px
 
 @mixin big-shadow-color($color)
-  // box-shadow: 3px 3px 0 0 #{$color}, 6px 3px 0 0 #{$color}, 9px 3px 0 0 #{$color}, 3px 6px 0 0 #{$color}, 9px 6px 0 0 #{$color}, 3px 9px 0 0 #{$color}, 6px 9px 0 0 #{$color}
   box-shadow: 3px 3px 0 0 #{$color}, 6px 3px 0 0 #{$color}, 9px 3px 0 0 #{$color}, 3px 6px 0 0 #{$color}, 3px 9px 0 0 #{$color}
   height: 3px 
   width: 3px
@@ -61,8 +59,6 @@ export default {
   
 .big-pixel-tabs
   .v-tab
-    // color: rgb(134, 115, 91) !important
-    // min-width: 49px !important
     background-color: rgb(176, 151, 130)
     box-shadow: 0px 3px 0px rgb(170, 144, 122) inset, 0 3px 5px -1px rgba(0,0,0,.2),0 5px 8px 0 rgba(0,0,0,.14),0 1px 14px 0 rgba(0,0,0,.12) !important
     border: 3px solid rgb(157, 128, 103)

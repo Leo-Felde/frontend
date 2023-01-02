@@ -4,11 +4,13 @@ import vuetify from './plugins/vuetify'
 import router from './router'
 import TextField from '@/components/TextField.vue'
 import StylizedCard from '@/components/layout/StylizedCard.vue'
+import PixelIcon from '@/components/PixelIcon.vue'
 
 Vue.config.productionTip = false
 
 Vue.component('TextField', TextField)
 Vue.component('StylizedCard', StylizedCard)
+Vue.component('PixelIcon', PixelIcon)
 
 new Vue({
   vuetify,

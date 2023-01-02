@@ -1,5 +1,5 @@
 <template>
-  <StylizedCard class="pa-2 ma-3" brown>
+  <StylizedCard class="pa-2 mx-3 mt-2" brown>
     <v-card-title class="justify-center"> Hábitos </v-card-title>
     <div class="py-2" id="habits-container">
       <v-btn fab class="mx-2" elevation="0" @click="showNewHabitDialog = true"> 
