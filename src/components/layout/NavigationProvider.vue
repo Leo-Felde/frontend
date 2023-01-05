@@ -82,6 +82,7 @@ export default {
 </Script>
 
 <style lang="sass" scoped>
+
 #navigation
   background: #353540
   outline: 3px solid white !important
@@ -123,4 +124,16 @@ export default {
     bottom: 5px
     -webkit-transform: rotate(180deg)
     transform: rotate(180deg)
+
+nav
+  padding: 30px
+a.v-btn
+  color: #2c3e50
+  background-color: transparent !important
+  margin-top: auto
+  margin-bottom: auto
+
+  &.router-link-exact-active
+    color: #42b983
+
 </style>

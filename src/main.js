@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import Vuelidate from 'vuelidate'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
@@ -11,6 +12,8 @@ Vue.config.productionTip = false
 Vue.component('TextField', TextField)
 Vue.component('StylizedCard', StylizedCard)
 Vue.component('PixelIcon', PixelIcon)
+
+Vue.use(Vuelidate)
 
 new Vue({
   vuetify,

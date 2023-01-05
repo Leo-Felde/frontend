@@ -8,7 +8,12 @@ const routes = [
   {
     path: '/auth',
     name: 'Login',
-    component: () => import(/* webpackChunkName: "Login" */ '../views/AuthView')
+    component: () => import(/* webpackChunkName: "Login" */ '../views/Auth/Index')
+  },
+  {
+    path: '/auth/new',
+    name: 'Create-account',
+    component: () => import(/* webpackChunkName: "Login" */ '../views/Auth/Create')
   },
   {
     path: '/',
