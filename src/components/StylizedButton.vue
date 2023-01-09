@@ -1,5 +1,17 @@
 <template>
-  <v-btn @click="$emit('click')" :block="block" :class="`pixel-btn ${buttonColor}-btn white--text`">
+  <div>
+  <v-btn v-if="special" @click="$emit('click')" :block="block" :class="`pixel-btn special-btn white--text`" :height="height" :max-width="maxWidth">
+    <div :class="`conteudo-botao ${loading ? 'v-hidden' : ''}`">
+      <slot />
+    </div>
+    <div class="v-btn__loader" v-if="loading">
+      <v-progress-circular indeterminate width="2" size="18" />
+    </div>
+    <div v-show="!noBorders" v-for="n in 4" :key="n" :id="`btn-special-border-deco-${n}`" />
+    <div v-show="!noDeco" v-for="n in 2" :key="`deco-${n}`" :id="`btn-special-inner-deco-${n}`" />
+  </v-btn>
+
+  <v-btn v-else @click="$emit('click')" :block="block" :class="`pixel-btn ${buttonColor}-btn white--text`" :height="height" :max-width="maxWidth">
     <div :class="`conteudo-botao ${loading ? 'v-hidden' : ''}`">
       <slot />
     </div>
@@ -8,16 +20,21 @@
     </div>
     <div v-show="!noBorders" v-for="n in 4" :key="n" :id="`btn-${buttonColor}-border-deco-${n}`" />
    </v-btn>
+  </div>
 </template>
 
 <script>
 export default {
   props: {
+    special: Boolean,
     block: Boolean,
     loading: Boolean,
     noBorders: Boolean,
+    noDeco: Boolean,
     disabled: Boolean,
-    color: { type: String, default: 'black' }
+    color: { type: String, default: 'black' },
+    height: { type: String, default: null },
+    maxWidth: { type: String, default: null }
   },
 
   computed: {
@@ -140,7 +157,6 @@ export default {
     @extend #pixel-btn-border-deco
     &-1
       @extend #pixel-btn-border-deco-1
-      @extend #btn-grey-border-deco
       @include corners("#9b9b9b", "#eaeaea")
     &-2
       @extend #pixel-btn-border-deco-2
@@ -151,5 +167,53 @@ export default {
     &-4
       @extend #pixel-btn-border-deco-4
       @include corners("#686868", "#eaeaea")
+    
+.special-btn.v-btn
+  @extend .pixel-btn
+  outline: 3px solid #8b6c5e
+  background-color: #c0a899 !important
+  box-shadow: 0px 3px 0px 0px #e3cebf inset, 0px -3px 0px 0px #a18774 inset !important
+  color: black !important
+  border-radius: 0px !important
+  #btn-special-border-deco
+    @extend #pixel-btn-border-deco
+    &-1
+      @extend #pixel-btn-border-deco-1
+      left: -13px
+      top: -17px
+      box-shadow: 6px 3px 0 0 rgba(139,108,94,1), 9px 3px 0 0 rgba(139,108,94,1), 3px 6px 0 0 rgba(139,108,94,1), 6px 6px 0 0 rgba(227,206,191,1), 9px 6px 0 0 rgba(139,108,94,1), 6px 9px 0 0 rgba(139,108,94,1)
+    &-2
+      @extend #pixel-btn-border-deco-2
+      right: -13px
+      top: -17px
+      box-shadow: 6px 3px 0 0 rgba(139,108,94,1), 9px 3px 0 0 rgba(139,108,94,1), 3px 6px 0 0 rgba(139,108,94,1), 6px 6px 0 0 rgba(227,206,191,1), 9px 6px 0 0 rgba(139,108,94,1), 6px 9px 0 0 rgba(139,108,94,1)
+    &-3
+      @extend #pixel-btn-border-deco-3
+      left: -13px
+      bottom: -17px
+      box-shadow: 6px 3px 0 0 rgba(139,108,94,1), 9px 3px 0 0 rgba(139,108,94,1), 3px 6px 0 0 rgba(139,108,94,1), 6px 6px 0 0 rgba(227,206,191,1), 9px 6px 0 0 rgba(139,108,94,1), 6px 9px 0 0 rgba(139,108,94,1)
+    &-4
+      @extend #pixel-btn-border-deco-4
+      right: -13px
+      bottom: -17px
+      box-shadow: 6px 3px 0 0 rgba(139,108,94,1), 9px 3px 0 0 rgba(139,108,94,1), 3px 6px 0 0 rgba(139,108,94,1), 6px 6px 0 0 rgba(227,206,191,1), 9px 6px 0 0 rgba(139,108,94,1), 6px 9px 0 0 rgba(139,108,94,1)
+  #btn-special-inner-deco
+    position: absolute
+    box-shadow: 3px 3px 0 0 rgba(139,108,94,1), 3px 6px 0 0 rgba(227,206,191,1), 6px 6px 0 0 rgba(139,108,94,1), 3px 9px 0 0 rgba(192,168,153,1), 6px 9px 0 0 rgba(139,108,94,1), 3px 12px 0 0 rgba(139,108,94,1)
+    height: 3px
+    width: 3px
+    z-index: 1
+    &-1
+      @extend #btn-special-inner-deco
+      left: -19px
+      -webkit-transform: rotate(180deg)
+      transform: rotate(180deg)
+      top: 85%
+    &-2
+      @extend #btn-special-inner-deco
+      right: -19px
+      top: 10%
 
+.v-btn--active::before 
+  opacity: 0 !important
 </style>

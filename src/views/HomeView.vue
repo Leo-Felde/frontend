@@ -1,7 +1,7 @@
 <template>
-  <StylizedCard class="pa-2 mx-3 mt-2" brown>
-    <v-card-title class="justify-center"> Hábitos </v-card-title>
-    <div class="py-2" id="habits-container">
+  <StylizedCard class="pa-2 mx-3 mt-6" brown>
+    <StylizedCard black class="px-3 py-2 cardtitle"> Hábitos </StylizedCard>
+    <div class="py-2 mt-6" id="habits-container">
       <v-btn fab class="mx-2" elevation="0" @click="showNewHabitDialog = true"> 
         <v-icon color="light-green darken-2">mdi-plus</v-icon> 
       </v-btn>
@@ -14,9 +14,9 @@
         <span class="habit-title caption">{{ item.title }}</span>
       </div>
     </div>
-    <v-divider class="my-2"/>
+    <v-divider class="mt-6 mb-10"/>
 
-      <v-card-subtitle class="justify-center pb-0"> Missões ativas </v-card-subtitle>
+    <StylizedCard black class="px-3 py-2 cardsubtitle"> Missões ativas </StylizedCard>
       <QuestList :items="tasks" />
 
       <HabitForm v-model="showNewHabitDialog" @newHabit="adicionarHabito" />
@@ -34,7 +34,7 @@ export default {
     press: false,
     pressTime: 0,
     showNewHabitDialog: false,
-    tasks: [{ id: 1, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'blue' }, { id: 2, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'yellow'  }, { id: 3, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'red'  }],
+    tasks: [{ id: 1, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'blue', expiration: '2023/01/17' }, { id: 2, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'yellow'  }, { id: 3, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'red'  }],
     habits: [{ id: 1, title: 'debug', icon: 'mdi-bug', color: 'green', value: 0 }]
   }),
 
@@ -90,4 +90,22 @@ export default {
 .v-dialog__content
   .v-card
     max-width: inherit !important
+
+.cardtitle
+  position: absolute
+  top: -18px
+  left: 0
+  right: 0
+  margin-left: auto
+  margin-right: auto
+  width: fit-content
+
+.cardsubtitle
+  position: absolute
+  top: 128px
+  left: 0
+  right: 0
+  margin-left: auto
+  margin-right: auto
+  width: fit-content
 </style>

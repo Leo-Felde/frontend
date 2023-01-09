@@ -11,10 +11,10 @@
                 <span class="caption d-flex justify-start">Lorem ipsum dolor sit amet.</span>
             </v-list-item-content>
 
-            <span class="caption d-flex justify-start expiration" v-if="task.expiration"> 26/12 <v-icon x-small>mdi-clock</v-icon> </span>
-            <div class="rewards caption">
+            <span class="d-flex justify-start expiration" v-if="task.expiration"> {{ formatarData(task.expiration) }} <PixelIcon icon="clock" small /> </span>
+            <div class="rewards caption d-flex">
                 <span class="green--text" v-if="task.xp">+{{ task.xp }}xp</span>
-                <span class="orange--text text--accent-2" v-if="task.money"> {{ task.money }}<v-icon color="orange accent-2" small> mdi-circle-multiple </v-icon></span>
+                <span class="orange--text ml-1 text--accent-2 d-flex" v-if="task.money"> {{ task.money }}<PixelIcon icon="coin-stack" x-small class="ml-1"/></span>
             </div>
         </StylizedCard>
         </v-list-item>
@@ -31,6 +31,13 @@ export default {
 
   props: {
     items: { type: Array, required: true} 
+  },
+
+  methods: {
+    formatarData (date) {
+      const dateString = new Date(date).toLocaleDateString('pt-PT')
+      return dateString.slice(0, 5)
+    }
   }
 }
 </script>
@@ -44,6 +51,7 @@ export default {
     right: 10px
 .expiration
     position: absolute
-    bottom: 0px
-    left: 5px
+    top: 0px
+    right: 5px
+    font-size: 0.9rem
 </style>

@@ -1,22 +1,20 @@
 <template>
-    <StylizedCard brown class="pa-2 ma-2">
-      <v-card-title class="justify-center"> Lojinha </v-card-title>
+    <StylizedCard brown class="px-4 pb-2 pt-7 mt-6 mx-3">
+      <StylizedCard black class="px-3 py-2 cardtitle"> Lojinha </StylizedCard>
       <v-row cols="12">
         <v-col cols="4">
           <StylizedCard brown-light content-class="d-flex" width="100%" height="80px" no-borders>
             <v-img
-          :src="require('../assets/img/penguino.png')"
-          class="my-3"
-          contain
-          height="61"
-        />
+              :src="require('../assets/img/penguino.png')"
+              class="my-3"
+              contain
+              height="61"
+            />
           </StylizedCard>
         </v-col>
         <v-col cols="8" class="text-start">
-          <div class="caption mt-4">
-            Você possui<span class="orange--text text--accent-2 caption"> 2 <v-icon small color="orange accent-2"> mdi-circle-multiple </v-icon></span> <p />
-            Você comprou 0 items
-          </div>
+          <div class="caption"> bem vindo a lojinha, aqui você pode trocar seu dinheirinho por items</div>
+           <div class="d-flex mt-auto caption"> Você possui<span class="ml-1 yellow--text text--accent-2 d-flex"> 2  <PixelIcon icon="coins-pile" x-small class="ml-1"/></span> <p /></div>
         </v-col>
       </v-row>
       <v-divider class="my-2"/>
@@ -61,4 +59,15 @@ export default {
   },
 }
 </script>
+
+<style lang="sass" scoped>
+.cardtitle
+  position: absolute
+  top: -18px
+  left: 0
+  right: 0
+  margin-left: auto
+  margin-right: auto
+  width: fit-content
+</style>
   
