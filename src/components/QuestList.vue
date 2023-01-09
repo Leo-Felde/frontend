@@ -3,23 +3,20 @@
         <v-list-item
         v-for="task in items"
         :key="task.id"
-        :class="`quest-item-${task.color} my-2 py-0`"
+        class="my-2 px-1"
         >
-            <v-img :src="require(`@/assets/img/${task.color}border.svg`)" v-for="n in 4" :key="n" :id="`sm-border-deco-${n}`" />
-            <v-list-item-avatar>
-                <v-icon>
-                    {{ task.icon }}
-                </v-icon>
-            </v-list-item-avatar>
-
-            <v-list-item-content>
-                <v-list-item-title class="d-flex justify-start"> {{ task.title }} </v-list-item-title>
+        <StylizedCard paper :color="task.color" content-class="d-flex px-3" width="100%" :no-deco="false">
+            <v-list-item-content class="mb-2">
+                <v-list-item-title class="d-flex justify-start"> {{ task.title }} <v-icon v-if="task.icon" class="ml-2"> {{ task.icon }} </v-icon> </v-list-item-title>
+                <span class="caption d-flex justify-start">Lorem ipsum dolor sit amet.</span>
             </v-list-item-content>
 
-            <v-list-item-action>
+            <span class="d-flex justify-start expiration" v-if="task.expiration"> {{ formatarData(task.expiration) }} <PixelIcon icon="clock" small /> </span>
+            <div class="rewards caption d-flex">
                 <span class="green--text" v-if="task.xp">+{{ task.xp }}xp</span>
-                <span class="orange--text" v-if="task.money"> {{ task.money }}<v-icon color="orange"> mdi-circle-multiple </v-icon></span>
-            </v-list-item-action>
+                <span class="orange--text ml-1 text--accent-2 d-flex" v-if="task.money"> {{ task.money }}<PixelIcon icon="coin-stack" x-small class="ml-1"/></span>
+            </div>
+        </StylizedCard>
         </v-list-item>
     </v-list>
 </template>
@@ -34,12 +31,27 @@ export default {
 
   props: {
     items: { type: Array, required: true} 
+  },
+
+  methods: {
+    formatarData (date) {
+      const dateString = new Date(date).toLocaleDateString('pt-PT')
+      return dateString.slice(0, 5)
+    }
   }
 }
 </script>
 
 <style lang="sass" scoped>
-::v-deep
-    .v-list-item
-        background: #fbf2eb
+
+
+.rewards
+    position: absolute
+    bottom: 0px
+    right: 10px
+.expiration
+    position: absolute
+    top: 0px
+    right: 5px
+    font-size: 0.9rem
 </style>

@@ -1,30 +1,73 @@
 <template>
-    <v-card class="pa-2 ma-5">
+    <StylizedCard brown class="px-4 pb-2 pt-7 mt-6 mx-3">
+      <StylizedCard black class="px-3 py-2 cardtitle"> Lojinha </StylizedCard>
       <v-row cols="12">
-        <v-col>
-          <v-card class="grey lighten-3 d-flex" height="60px" elevation="0">
-            <span class="ma-auto caption grey--text"> Loja </span>
-          </v-card>
+        <v-col cols="4">
+          <StylizedCard brown-light content-class="d-flex" width="100%" height="80px" no-borders>
+            <v-img
+              :src="require('../assets/img/penguino.png')"
+              class="my-3"
+              contain
+              height="61"
+            />
+          </StylizedCard>
+        </v-col>
+        <v-col cols="8" class="text-start">
+          <div class="caption"> bem vindo a lojinha, aqui você pode trocar seu dinheirinho por items</div>
+           <div class="d-flex mt-auto caption"> Você possui<span class="ml-1 yellow--text text--accent-2 d-flex"> 2  <PixelIcon icon="coins-pile" x-small class="ml-1"/></span> <p /></div>
         </v-col>
       </v-row>
       <v-divider class="my-2"/>
-      <v-row cols="12">
+
+    <PixelTabs v-model="tab" :items="tabs" class="mb-3" content-class="d-flex justify-space-around"/>
+
+      <v-row cols="12" class="ma-0 mb-3">
         <v-col cols="4" v-for="i in 12" :key="i">
-          <v-card class="grey lighten-3 d-flex" elevation="0" height="50px">
+          <StylizedCard black content-class="d-flex" height="50px">
             <span class="ma-auto caption grey--text"> item </span>
-          </v-card>
+          </StylizedCard>
         </v-col>
       </v-row>
-    </v-card>
+    </StylizedCard>
   </template>
   
 <script>
 // @ is an alias to /src
+
+import PixelTabs from '@/components/pixelTab.vue'
+
   
 export default {
   name: 'tasksIndex',
+
   components: {
-  }
+    PixelTabs
+  },
+    
+  data: () => ({
+    tab: 0,
+    tabs: [
+      { icon: 'weapons' },
+      { icon: 'armor-boots' },
+      { icon: 'potions' }
+    ]
+  }),
+  methods: {
+    changeTab() {
+      // ?
+    }
+  },
 }
 </script>
+
+<style lang="sass" scoped>
+.cardtitle
+  position: absolute
+  top: -18px
+  left: 0
+  right: 0
+  margin-left: auto
+  margin-right: auto
+  width: fit-content
+</style>
   

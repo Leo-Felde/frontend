@@ -5,24 +5,20 @@
       <router-link to="/about">About</router-link>
     </v-app-bar> -->
 
-    <MainMenu v-if="!mobile" @toggleNavigationDrawer="toggleNavDrawer" />
-    <div id="view-box">
-      <router-view/>
-    </div>
-
-    <NavigationProvider v-model="navDrawer" />
+      <div :id="`${loginRoute ? 'login-' : ''}view-box`">
+        <router-view/>
+      </div>
+      <NavigationProvider v-show="!loginRoute" v-model="navDrawer" />
 </v-app>
 </template>
 
 <script>
-import MainMenu from '@/components/layout/MainMenu.vue'
 import NavigationProvider from '@/components/layout/NavigationProvider.vue'
 
 export default {
   name: 'App',
 
   components: {
-    MainMenu,
     NavigationProvider
   },
 
@@ -51,23 +47,19 @@ export default {
 
 <style lang="sass">
 @import './styles/main.sass'
+#login-view-box
+  height: 100%
+  background-color: #a94949
+
 
 #view-box
   height: 100%
+  margin-bottom: 56px
+  max-height: calc(100vh - 56px)
 #app
   font-family: Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   text-align: center
-
-nav
-  padding: 30px
-a
-  font-weight: bold
-  color: #2c3e50
-
-  &.router-link-exact-active
-    color: #42b983
-
 
 </style>

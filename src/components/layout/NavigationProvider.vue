@@ -29,24 +29,24 @@
     </v-navigation-drawer>
 
     <!-- navegação mobile -->
-    <v-bottom-navigation v-else v-model="tab" color="primary" fixed id="navigation">
+    <v-bottom-navigation v-else v-model="tab" color="#000" fixed id="navigation">
       <v-img src="@/assets/img/navdeco1.svg" id="nav-deco-middle" />
       <v-img :src="require(`@/assets/img/navdecocorner.svg`)" v-for="n in 4" :key="n" :id="`corner-deco-${n}`" />
 
       <v-btn value="avatar" to="/character">
-        <v-icon color="#bbb6c4"> mdi-human-male-height </v-icon>
+        <v-icon> mdi-human-male-height </v-icon>
       </v-btn>
       <v-btn value="stats" to="/stats">
-        <v-icon color="#bbb6c4"> mdi-chart-bar </v-icon>
+        <v-icon> mdi-chart-bar </v-icon>
       </v-btn>
       <v-btn value="home" to="/home" id="main-nav">
-        <v-icon color="#bbb6c4" large> mdi-view-dashboard-outline </v-icon>
+        <v-icon large> mdi-view-dashboard-outline </v-icon>
       </v-btn>
       <v-btn value="tasks" to="/tasks">
-        <v-icon color="#bbb6c4"> mdi-format-list-checkbox </v-icon>
+        <v-icon> mdi-format-list-checkbox </v-icon>
       </v-btn>
       <v-btn value="shop" to="/shop">
-        <v-icon color="#bbb6c4"> mdi-basket </v-icon>
+        <v-icon> mdi-basket </v-icon>
       </v-btn>
     </v-bottom-navigation>
   </div>
@@ -82,10 +82,17 @@ export default {
 </Script>
 
 <style lang="sass" scoped>
+
 #navigation
   background: #353540
   outline: 3px solid white !important
-  
+  .v-btn
+    .v-icon
+     color: #bbb6c4
+    &--active
+      .v-icon
+        color: white
+    
 #nav-deco-middle
   position: absolute
   width: 55px
@@ -117,4 +124,16 @@ export default {
     bottom: 5px
     -webkit-transform: rotate(180deg)
     transform: rotate(180deg)
+
+nav
+  padding: 30px
+a.v-btn
+  color: #2c3e50
+  background-color: transparent !important
+  margin-top: auto
+  margin-bottom: auto
+
+  &.router-link-exact-active
+    color: #42b983
+
 </style>

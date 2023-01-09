@@ -4,70 +4,6 @@
 #view-box
   background-color: #a94949
 
-.pixel-card
-  outline: 3px solid white !important
-  box-shadow: 0px 0px 0px 3px #353540 inset, 0px 0px 0px 6px #a88b79 inset !important
-  background-color: #bdaa97 !important
-  padding: 4px 4px 4px 4px
-  $space: -3px
-  #border-deco
-    position: absolute
-    width: 27px
-    &-1
-      @extend #border-deco
-      left: $space
-      top: $space
-      -webkit-transform: scaleX(-1)
-      transform: scaleX(-1)
-    &-2
-      @extend #border-deco
-      right: $space
-      top: $space
-    &-3
-      @extend #border-deco
-      left: $space
-      bottom: $space
-      -webkit-transform: rotate(180deg)
-      transform: rotate(180deg)
-    &-4
-      @extend #border-deco
-      right: $space
-      bottom: $space
-      -webkit-transform: scaleX(-1) rotate(180deg)
-      transform: scaleX(-1) rotate(180deg)
-
-.pixel-card-light
-  outline: 3px solid #4d3f38 !important
-  box-shadow: 0px 0px 0px 3px #bdaa97 inset !important
-  background-color: #d4c2b6 !important
-  padding: 4px 4px 4px 4px
-  $space: -3px
-  #border-deco
-    position: absolute
-    width: 27px
-    &-1
-      @extend #border-deco
-      left: $space
-      top: $space
-      -webkit-transform: scaleX(-1)
-      transform: scaleX(-1)
-    &-2
-      @extend #border-deco
-      right: $space
-      top: $space
-    &-3
-      @extend #border-deco
-      left: $space
-      bottom: $space
-      -webkit-transform: rotate(180deg)
-      transform: rotate(180deg)
-    &-4
-      @extend #border-deco
-      right: $space
-      bottom: $space
-      -webkit-transform: scaleX(-1) rotate(180deg)
-      transform: scaleX(-1) rotate(180deg)
-
 .pixel-card-alternate
   outline: 3px solid #8b6c5e !important
   background-color: #c0a899 !important
@@ -89,7 +25,7 @@
     border: 4px solid #222034
   &-green
     border: 4px solid #37946e
-    
+
 #sm-border-deco
   position: absolute
   height: 14px
@@ -117,9 +53,5 @@
     -webkit-transform: rotate(180deg)
     transform: rotate(180deg)
 
-.stylized-tf
-  .v-input__slot
-    border-radius: 0px !important
-    outline: 3px solid white
-    background: #86735b !important
-    box-shadow: 0px 0px 0px 3px #353540 inset, 0px 7px 0px 0px #7e674c inset !important
+.v-slide-group__prev--disabled, .v-slide-group__next--disabled
+  display: none !important
