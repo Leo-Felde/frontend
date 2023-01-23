@@ -1,0 +1,197 @@
+<template>
+  <div :class="{'d-flex-column': showCustomization}">
+    <div id="character_wrapper">
+      <!-- PERSONAGEM -->
+      <canvas id="canvas-body"> ERRO </canvas>
+      <img id="source-body" style="display:none;" :src="require('@/assets/character/body.png')" width="100px"/>
+      
+      <v-img src="@/assets/character/eye.png" id="char-eye-whites" contain width="100px"/>
+      <canvas id="canvas-eye"> ERRO </canvas>
+      <img id="source-eye" style="display:none;" :src="require('@/assets/character/eyec.png')" width="100px"/>
+      
+      <canvas id="canvas-hair" v-show="!charHead"> ERRO </canvas>
+      <img id="source-hair" style="display:none;" :src="require(`@/assets/character/hair/hair-${charHair}.png`)" width="100" />
+
+      <!-- ITEMS -->
+      <v-img v-if="charHead" :src="require(`@/assets/character/head/${charHead}.png`)" id="char-head" contain width="96px"/>
+      <v-img v-if="charTop" :src="require(`@/assets/character/top/${charTop}.png`)" id="char-top" contain width="96px"/>
+      <v-img v-if="charBottom" :src="require(`@/assets/character/bottom/${charBottom}.png`)" id="char-bottom" contain width="96px"/>
+   </div>
+
+    <!-- INVENTÁRIO -->
+    <PixelIcon icon="big-box" id="inventory-btn" @click="openInventory()" />
+    <v-dialog v-model="inventory">
+      <PixelTabs v-model="inventoryTab" :items="inventoryTabs" />
+      <StylizedCard brown>
+        <v-row cols="12" class="ma-0 mb-3">
+        <v-col cols="4" v-for="i in 12" :key="`inv-${i}`" @click="currentTabItems[i - 1] ? selectItem(inventoryTabs[inventoryTab], currentTabItems[i - 1]) : null" :class="{'pointer': currentTabItems[i]}">
+          <StylizedCard black content-class="d-flex" height="50px">
+            <v-img v-if="currentTabItems[i - 1]" :src="require(`@/assets/character/${inventoryTabs[inventoryTab]}/icon/${currentTabItems[i - 1]}.png`)" height="30px" contain />
+          </StylizedCard>
+        </v-col>
+      </v-row>
+      </StylizedCard>
+    </v-dialog>
+
+
+   <!--  CUSTOMIZAÇÃO -->
+    <div id="character-customization__wrapper" v-if="showCustomization">
+      <PixelTabs v-model="tab" :items="tabs" />
+      <div v-if="tab === 0">
+        <v-color-picker v-model="bodyColor" hide-inputs mode="hexa" @update:color="renderCanvas('body')"/>
+      </div>
+      <div v-else-if="tab === 1">
+        <v-card outliend class="vertical-slider">
+          <v-img v-for="n in 10" :key="`hair-${n}`" :src="require(`@/assets/character/hair/hair-${n + 1}.png`)" class="mx-4" contain width="40px"  @click="selectHair(n + 1)"/>
+        </v-card>
+        <v-color-picker v-model="hairColor" hide-inputs mode="hexa" @update:color="renderCanvas('hair')" />
+      </div>
+      <v-color-picker  v-model="eyeColor" v-else-if="tab === 2" hide-inputs mode="hexa" @update:color="renderCanvas('eye')"/>
+    </div>
+  </div>
+</template>
+
+<script>
+import PixelTabs from '@/components/pixelTab.vue'
+
+export default {
+  name: 'CharacterViewer',
+
+  components: {
+    PixelTabs
+  },
+  
+  props: {
+    showCustomization: Boolean,
+    ShowInventory: Boolean,
+    id: { type: [Number, String], default: undefined } // usar pra carregar as configs dps
+  },
+
+  mounted () {
+    this.renderCanvas('hair')
+    this.renderCanvas('body')
+    this.renderCanvas('eye')
+  },
+
+  computed: {
+    currentTabItems () {
+      return this.ownedItems[this.inventoryTabs[this.inventoryTab]] || []
+    }
+  },
+
+  data: () => ({
+    inventory: false,
+    bodyColor: '#CA977FDE',
+    eyeColor: '#23A52E',
+    hairColor: '#3f3f3f',
+    charHair: 1,
+    charHead: null,
+    charTop: null,
+    charBottom: null,
+    ownedItems: { head: [ 'cultist', 'blue-armor', 'red-armor', 'aprentice', 'fox-mask', 'wizard-hat'], top: ['cultist', 'blue-armor', 'red-armor', 'shirt'], bottom: ['blue-armor', 'red-armor', 'black-pants'] },
+    tab: 0,
+    tabs: ['corpo', 'cabelo', 'olhos'],
+    inventoryTab: 0,
+    inventoryTabs: ['head', 'top', 'bottom']
+  }),
+
+  methods: {
+    selectHair (number) {
+      if (this.charHair === number) return
+      this.charHair = number
+
+      setTimeout(() => {
+        this.renderCanvas('hair')
+      }, 100)
+    },
+
+    openInventory () {
+      this.inventory = true
+    },
+    
+    selectItem (bPart, item) {
+      console.log(`equip ${item} on ${bPart}`)
+      const capitalizedBP = bPart.charAt(0).toUpperCase() + bPart.slice(1)
+      if (this[`char${capitalizedBP}`] === item) this[`char${capitalizedBP}`] = null
+      else this[`char${capitalizedBP}`] = item
+    },
+
+    renderCanvas (name) {
+      const spritefont = document.getElementById(`source-${name}`)
+      const fontCanvas = document.getElementById(`canvas-${name}`)
+      const fontContext = fontCanvas.getContext('2d')
+      const color = this[`${name}Color`]
+
+      fontCanvas.width = 300
+      fontCanvas.height = spritefont.height
+
+      fontContext.fillStyle = 'black'
+      fontContext.fillRect(0, 0, fontCanvas.width, fontCanvas.height)
+      fontContext.drawImage(spritefont, 0, 0)
+        
+      fontContext.globalCompositeOperation = 'multiply'
+      fontContext.fillStyle = color
+      fontContext.fillRect(0, 0, fontCanvas.width, fontCanvas.height)
+
+      fontContext.globalCompositeOperation = 'destination-atop'
+      fontContext.drawImage(spritefont, 0, 0)
+
+    }
+  }
+}
+</script>
+
+<style lang="sass" scoped>
+#inventory-btn
+  position: absolute
+  top: 130px
+  left: 130px
+
+#char
+  position: absolute
+  z-index: 2
+  top: 33px
+  left: 37px
+  &-eye-whites
+    @extend #char
+    left: 36px
+    top: 25px
+  &-head // capacete ou chapeu
+    @extend #char
+    z-index: 4
+  &-top // armadura ou roupa
+    @extend #char
+    z-index: 3
+  &-bottom // pernas
+    @extend #char
+
+#canvas
+  position: absolute
+  left: 39px
+  top: 28px
+  z-index: 2
+  width: 100px
+  height: 135px
+  &-hair
+    @extend #canvas
+  &-body
+    @extend #canvas
+  &-eye
+    @extend #canvas
+    left: 39px !important
+
+#character_wrapper
+  width: 180px
+  height: 170px
+
+.vertical-slider
+  display: flex
+  max-width: inherit
+  overflow: hidden
+  overflow-x: scroll
+  scrollbar-width: none
+  &::-webkit-scrollbar
+    display: none
+:deep(.v-color-picker__alpha)
+  display: none !important
+</style>

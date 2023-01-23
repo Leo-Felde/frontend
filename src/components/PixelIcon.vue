@@ -1,5 +1,9 @@
 <template>
-  <v-img :src="require(`@/assets/icons/${icon}.png`)" contain :max-width="width"/>
+  <v-btn icon v-if="$listeners.click" @click="$emit('click')">
+    <v-img :src="require(`@/assets/icons/${icon}.png`)" contain :max-width="width"/>
+  </v-btn>
+  
+  <v-img v-else :src="require(`@/assets/icons/${icon}.png`)" contain :max-width="width"/>
 </template>
 
 <script>

@@ -10,7 +10,7 @@
           </StylizedCard>
           <v-divider />
 
-          <v-row no-gutters class="mx-8 mt-1">
+          <v-row no-gutters class="mx-8 mt-4">
             <v-col>
               <TextField v-model="form.titulo" label="título"/>
             </v-col>
@@ -214,14 +214,6 @@ export default {
 .habit-wrapper
   margin-top: 50px !important
 
-.v-expansion-panel
-  background: transparent !important
-  &::before
-    box-shadow: none !important
-  &--active
-    margin-top: 0px !important
-    .v-expansion-panel-header--active
-      padding-top: 0px
 ::v-deep
   .v-dialog.dialogo-icones
     max-height: 600px !important
@@ -231,7 +223,7 @@ export default {
       height: 100%
       overflow: hidden !important
     .cardtitle
-      z-index: 1
+      z-index: 2
       position: absolute
       top: 0px
       left: 0px

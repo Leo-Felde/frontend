@@ -24,16 +24,12 @@
     <div v-show="!noDeco" v-for="n in 2" :key="`inner-${n}`" :id="`paper-inner-deco-${n}`"/>
     <slot />
   </v-card>
-
-  <!-- <v-card v-else-if="paper" :class="`paper ${contentClass}`" tile :height="height">
-    <v-img v-show="!noBorders" src="@/assets/img/redjewelborder.svg" v-for="n in 4" :key="n" :id="`border-deco-${n}`" />
-    <slot/>
-  </v-card> -->
 </template>
 
 <script>
 export default {
   props: {
+    pointer: Boolean,
     black: Boolean,
     brown: Boolean,
     brownLight: Boolean,
@@ -44,9 +40,14 @@ export default {
     height: { type: String, default: null },
     width: { type: String, default: null },
     contentClass: { type: String, default: null },
-    color: { type: String, default: null }
+    color: { type: String, default: null },
+  },
 
-  } 
+  computed: {
+    possuiClick () {
+      return !!this.$listeners.click
+    }
+  }
 }
 </script>
 
