@@ -1,5 +1,5 @@
 <template>
-  <StylizedCard class="pa-2 mx-3 mt-6" brown>
+  <StylizedCard class="pa-2 mx-4 mt-6" brown>
     <StylizedCard black class="px-3 py-2 cardtitle"> Hábitos </StylizedCard>
     <div class="py-2 mt-6" id="habits-container">
       <v-btn fab class="mx-2" elevation="0" @click="showNewHabitDialog = true"> 
@@ -34,7 +34,7 @@ export default {
     press: false,
     pressTime: 0,
     showNewHabitDialog: false,
-    tasks: [{ id: 1, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'blue', expiration: '2023/01/17' }, { id: 2, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'yellow'  }, { id: 3, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'red'  }],
+    tasks: [{ id: 1, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'blue', expiration: '2023/02/28' }, { id: 2, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'yellow', expiration: '2023/02/02'  }, { id: 3, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'red'  }],
     habits: [{ id: 1, title: 'debug', icon: 'mdi-bug', color: 'green', value: 0 }]
   }),
 

@@ -1,8 +1,7 @@
 <template>
   <StylizedCard brown class="ma-4 mt-6" height="90%" >
-    <StylizedCard black class="cardtitle px-3 py-2"> Character </StylizedCard>
-    <v-btn smalll icon class="debug-btn" @click="debug = !debug"> <v-icon> mdi-bug </v-icon></v-btn>
-    <CharacterViewer :showCustomization="debug" />
+    <StylizedCard black class="cardtitle px-3 py-2"> Personagem </StylizedCard>
+    <CharacterViewer class="mx-auto"/>
   </StylizedCard>
 </template>
 <script>
@@ -19,7 +18,7 @@ export default {
   },
 
   data: () => ({
-    debug: true
+
   })
 }
 </script>

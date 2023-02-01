@@ -20,6 +20,16 @@ const routes = [
     redirect: '/home'
   },
   {
+    path: '/stats',
+    name: 'Stats',
+    component: () => import(/* webpackChunkName: "about" */ '../views/StatsView.vue')
+  },
+  {
+    path: '/character',
+    name: 'character',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Character/Index.vue')
+  }, 
+  {
     path: '/home',
     name: 'home',
     component: HomeView
@@ -38,11 +48,6 @@ const routes = [
     path: '/about',
     name: 'about',
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }, 
-  {
-    path: '/character',
-    name: 'about',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Character/Index.vue')
   }, 
 ]
 

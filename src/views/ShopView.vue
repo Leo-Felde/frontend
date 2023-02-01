@@ -1,5 +1,5 @@
 <template>
-    <StylizedCard brown class="px-4 pb-2 pt-7 mt-6 mx-3">
+    <StylizedCard brown class="px-4 pb-2 pt-7 mt-6 mx-4">
       <StylizedCard black class="px-3 py-2 cardtitle"> Lojinha </StylizedCard>
       <v-row cols="12">
         <v-col cols="4">
@@ -19,15 +19,16 @@
       </v-row>
       <v-divider class="my-2"/>
 
-    <PixelTabs v-model="tab" :items="tabs" class="mb-3" content-class="d-flex justify-space-around"/>
+    
+      <PixelTabs v-model="tab" :items="tabs" content-class="d-flex justify-space-around"/>
 
-      <v-row cols="12" class="ma-0 mb-3">
-        <v-col cols="4" v-for="i in 12" :key="i">
-          <StylizedCard black content-class="d-flex" height="50px">
-            <span class="ma-auto caption grey--text"> item </span>
-          </StylizedCard>
-        </v-col>
-      </v-row>
+    <v-row cols="12" class="ma-0 mb-3">
+      <v-col cols="4" v-for="i in 12" :key="`inv-${i}`" @click="currentTabItems[i - 1] ? selectItem(tabs[tab], currentTabItems[i - 1]) : null" :class="{'pointer': currentTabItems[i - 1]}">
+        <StylizedCard light content-class="d-flex" height="50px">
+          <v-img v-if="currentTabItems[i - 1]" :src="require(`@/assets/character/${tabs[tab]}/icon/${currentTabItems[i - 1]}.png`)" height="30px" contain class="self-align-center" />
+        </StylizedCard>
+      </v-col>
+    </v-row>
     </StylizedCard>
   </template>
   
@@ -43,14 +44,21 @@ export default {
   components: {
     PixelTabs
   },
+
+  computed: {
+    currentTabItems () {
+      return this.items[this.tabs[this.tab]] || []
+    }
+  },
     
   data: () => ({
     tab: 0,
-    tabs: [
-      { icon: 'weapons' },
-      { icon: 'armor-boots' },
-      { icon: 'potions' }
-    ]
+    tabs: ['head', 'top', 'bottom'],
+    items: {
+      head: [ 'gladiator', 'wizards-hat', 'templar', 'fox-mask'],
+      top: ['gladiator', 'templar', 'red-armor', 'tuxedo', 'red-jacket'],
+      bottom: ['gladiator', 'templar', 'wills']
+    },
   }),
   methods: {
     changeTab() {

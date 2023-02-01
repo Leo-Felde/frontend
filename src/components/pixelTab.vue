@@ -2,10 +2,10 @@
   <div>
     <v-tabs v-if="bigTabs" v-model="tab" :show-arrows="false" :class="`big-pixel-tabs ${contentClass}`">
       <v-tab v-for="tab in items" :key="tab" class="mx-2">
-        <div v-for="i in 4" :key="i" :class="`big-pixel-tab-deco-${i}`"/>
+        <div v-for="i in 4" :key="i" :class="`pixel-tab-deco-${i}`"/>
         <span v-if="typeof tab !== 'object'"> {{  tab }} </span>
-        <span v-if-else= "tab.title"> {{ tab.title }} </span>
-        <v-icon v-if="tab.icon" :icon="tab.icon" />
+        <span v-else-if= "tab.title"> {{ tab.title }} </span>
+        <PixelIcon v-if="tab.icon" :icon="tab.icon" />
       </v-tab>
     </v-tabs>
 

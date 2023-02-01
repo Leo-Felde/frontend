@@ -1,5 +1,11 @@
 <template>
-  <div :class="{'d-flex-column': showCustomization}">
+  <div>
+    <!-- INFO -->
+    <div id="user-info" class="mt-6">
+      <span class="subtitle-2"> nome_teste lvl.1 </span>
+      <v-progress-linear value="15" height="10px" />
+    </div>
+
     <div id="character_wrapper">
       <!-- PERSONAGEM -->
       <canvas id="canvas-body"> ERRO </canvas>
@@ -9,45 +15,43 @@
       <canvas id="canvas-eye"> ERRO </canvas>
       <img id="source-eye" style="display:none;" :src="require('@/assets/character/eyec.png')" width="100px"/>
       
-      <canvas id="canvas-hair" v-show="!charHead"> ERRO </canvas>
+      <canvas id="canvas-hair"> ERRO </canvas>
       <img id="source-hair" style="display:none;" :src="require(`@/assets/character/hair/hair-${charHair}.png`)" width="100" />
 
       <!-- ITEMS -->
-      <v-img v-if="charHead" :src="require(`@/assets/character/head/${charHead}.png`)" id="char-head" contain width="96px"/>
-      <v-img v-if="charTop" :src="require(`@/assets/character/top/${charTop}.png`)" id="char-top" contain width="96px"/>
-      <v-img v-if="charBottom" :src="require(`@/assets/character/bottom/${charBottom}.png`)" id="char-bottom" contain width="96px"/>
-   </div>
-
-    <!-- INVENTÁRIO -->
-    <PixelIcon icon="big-box" id="inventory-btn" @click="openInventory()" />
-    <v-dialog v-model="inventory">
-      <PixelTabs v-model="inventoryTab" :items="inventoryTabs" />
-      <StylizedCard brown>
-        <v-row cols="12" class="ma-0 mb-3">
-        <v-col cols="4" v-for="i in 12" :key="`inv-${i}`" @click="currentTabItems[i - 1] ? selectItem(inventoryTabs[inventoryTab], currentTabItems[i - 1]) : null" :class="{'pointer': currentTabItems[i]}">
-          <StylizedCard black content-class="d-flex" height="50px">
-            <v-img v-if="currentTabItems[i - 1]" :src="require(`@/assets/character/${inventoryTabs[inventoryTab]}/icon/${currentTabItems[i - 1]}.png`)" height="30px" contain />
-          </StylizedCard>
-        </v-col>
-      </v-row>
-      </StylizedCard>
-    </v-dialog>
-
-
-   <!--  CUSTOMIZAÇÃO -->
-    <div id="character-customization__wrapper" v-if="showCustomization">
-      <PixelTabs v-model="tab" :items="tabs" />
-      <div v-if="tab === 0">
-        <v-color-picker v-model="bodyColor" hide-inputs mode="hexa" @update:color="renderCanvas('body')"/>
-      </div>
-      <div v-else-if="tab === 1">
-        <v-card outliend class="vertical-slider">
-          <v-img v-for="n in 10" :key="`hair-${n}`" :src="require(`@/assets/character/hair/hair-${n + 1}.png`)" class="mx-4" contain width="40px"  @click="selectHair(n + 1)"/>
-        </v-card>
-        <v-color-picker v-model="hairColor" hide-inputs mode="hexa" @update:color="renderCanvas('hair')" />
-      </div>
-      <v-color-picker  v-model="eyeColor" v-else-if="tab === 2" hide-inputs mode="hexa" @update:color="renderCanvas('eye')"/>
+      <v-img v-if="charHead" :src="require(`@/assets/character/head/${charHead}.png`)" id="char-head" contain width="100px"/>
+      <v-img v-if="charTop" :src="require(`@/assets/character/top/${charTop}.png`)" id="char-top" contain width="100px"/>
+      <v-img v-if="charBottom" :src="require(`@/assets/character/bottom/${charBottom}.png`)" id="char-bottom" contain width="100px"/>
     </div>
+
+    
+    <!-- INVENTARIO -->
+    <PixelTabs v-model="inventoryTab" :items="inventoryTabs" content-class="d-flex justify-space-around"/>
+    <v-row cols="12" class="ma-0 mb-3">
+      <v-col cols="4" v-for="i in 12" :key="`inv-${i}`" @click="currentTabItems[i - 1] ? selectItem(inventoryTabs[inventoryTab], currentTabItems[i - 1]) : null" :class="{'pointer': currentTabItems[i - 1]}">
+        <StylizedCard light content-class="d-flex" height="50px">
+          <v-img v-if="currentTabItems[i - 1]" :src="require(`@/assets/character/${inventoryTabs[inventoryTab]}/icon/${currentTabItems[i - 1]}.png`)" height="30px" contain class="self-align-center" />
+        </StylizedCard>
+      </v-col>
+    </v-row>
+
+
+    <!--  CUSTOMIZAÇÃO -->
+      <v-btn icon id="hair-previous" @click="changeHair('prev')"> <v-icon> mdi-chevron-left </v-icon> </v-btn>
+      <v-btn icon id="hair-next" @click="changeHair('next')"> <v-icon> mdi-chevron-right </v-icon> </v-btn>
+
+      <div class="d-flex-column" id="color-btns">
+        <div class="d-flex mb-1"><v-btn fab x-small :color="bodyColor" elevation="0" @click="colorPick('body')"/> <span class="caption colortitle">Pele</span></div>
+        <div class="d-flex mb-1"><v-btn fab x-small :color="hairColor" elevation="0" @click="colorPick('hair')"/> <span class="caption colortitle">Cabelo</span> </div>
+        <div class="d-flex"><v-btn fab x-small :color="eyeColor" elevation="0" @click="colorPick('eye')"/> <span class="caption colortitle">Olhos</span></div>
+      </div>
+
+    <v-dialog v-model="showPicker">
+      <v-color-picker v-if="currentPicker === 0" v-model="bodyColor" hide-inputs mode="hexa" @update:color="renderCanvas('body')" class="mx-auto" />
+      <v-color-picker v-else-if="currentPicker === 1" v-model="hairColor" hide-inputs mode="hexa" @update:color="renderCanvas('hair')" class="mx-auto" />
+      <v-color-picker v-else-if="currentPicker === 2" v-model="eyeColor"  hide-inputs mode="hexa" @update:color="renderCanvas('eye')" class="mx-auto" />
+    </v-dialog>
+    
   </div>
 </template>
 
@@ -62,15 +66,16 @@ export default {
   },
   
   props: {
-    showCustomization: Boolean,
     ShowInventory: Boolean,
     id: { type: [Number, String], default: undefined } // usar pra carregar as configs dps
   },
 
   mounted () {
-    this.renderCanvas('hair')
-    this.renderCanvas('body')
-    this.renderCanvas('eye')
+    setTimeout(() => {
+      this.renderCanvas('hair')
+      this.renderCanvas('body')
+      this.renderCanvas('eye')
+    }, 100)
   },
 
   computed: {
@@ -80,17 +85,22 @@ export default {
   },
 
   data: () => ({
+    showPicker: false,
     inventory: false,
     bodyColor: '#CA977FDE',
     eyeColor: '#23A52E',
     hairColor: '#3f3f3f',
     charHair: 1,
     charHead: null,
-    charTop: null,
-    charBottom: null,
-    ownedItems: { head: [ 'cultist', 'blue-armor', 'red-armor', 'aprentice', 'fox-mask', 'wizard-hat'], top: ['cultist', 'blue-armor', 'red-armor', 'shirt'], bottom: ['blue-armor', 'red-armor', 'black-pants'] },
-    tab: 0,
-    tabs: ['corpo', 'cabelo', 'olhos'],
+    charTop: 'shirt',
+    charBottom: 'black-pants',
+    ownedItems: {
+      head: [ 'cultist', 'blue-armor', 'red-armor', 'wills'],
+      top: ['cultist', 'blue-armor', 'red-armor', 'wills', 'shirt'],
+      bottom: ['blue-armor', 'red-armor', 'wills', 'black-pants']
+    },
+    currentPicker: 0,
+    colorPickers: ['body', 'hair', 'eye'],
     inventoryTab: 0,
     inventoryTabs: ['head', 'top', 'bottom']
   }),
@@ -107,6 +117,33 @@ export default {
 
     openInventory () {
       this.inventory = true
+    },
+
+    changeHair (action) {
+      if (action === 'next') {
+        if (this.charHair === 21) {
+          this.charHair = 1
+        } else {
+          this.charHair += 1
+        }
+      } else {
+        if (parseInt(this.charHair) === 1) {
+          this.charHair = 21
+        } else {
+          this.charHair -= 1
+        }
+      }
+
+      setTimeout(() => {
+        this.renderCanvas('hair')
+      }, 100)
+    },
+
+    colorPick (which) {
+      console.log(which)
+      this.currentPicker = this.colorPickers.indexOf(which)
+      console.log(this.currentPicker)
+      this.showPicker = true
     },
     
     selectItem (bPart, item) {
@@ -142,6 +179,35 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.lvl-bar
+  display: flex
+  margin-left: auto
+  margin-right: auto
+
+#user-info
+  max-width: 40vw
+  width: 100%
+  position: relative
+  margin-left: auto
+  margin-right: auto
+
+#color-btns
+  position: absolute
+  top: 80px
+  left: 150px
+    
+#hair
+  position: absolute
+  top: 80px
+  left: 0px
+  z-index: 4
+  &-next
+    @extend #hair
+    left: 110px
+  &-previous
+    @extend #hair
+    left: 8px
+
 #inventory-btn
   position: absolute
   top: 130px
@@ -150,12 +216,11 @@ export default {
 #char
   position: absolute
   z-index: 2
-  top: 33px
-  left: 37px
+  top: 0px
+  left: 22px
   &-eye-whites
     @extend #char
-    left: 36px
-    top: 25px
+    left: 21px
   &-head // capacete ou chapeu
     @extend #char
     z-index: 4
@@ -164,25 +229,27 @@ export default {
     z-index: 3
   &-bottom // pernas
     @extend #char
+    z-index: 2
 
 #canvas
   position: absolute
-  left: 39px
-  top: 28px
+  left: 25px
+  top: 0px
   z-index: 2
   width: 100px
   height: 135px
   &-hair
     @extend #canvas
+    z-index: 4
   &-body
     @extend #canvas
   &-eye
     @extend #canvas
-    left: 39px !important
 
 #character_wrapper
   width: 180px
   height: 170px
+  position: relative
 
 .vertical-slider
   display: flex
@@ -194,4 +261,11 @@ export default {
     display: none
 :deep(.v-color-picker__alpha)
   display: none !important
+
+:deep(.v-color-picker__preview:not(.v-color-picker__preview--hide-alpha) .v-color-picker__hue)
+  margin-bottom: 0px !important
+
+.colortitle
+  align-self: center !important
+  margin-left: 5px
 </style>
