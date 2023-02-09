@@ -5,10 +5,10 @@
     </StylizedCard>
     <v-row cols="12" no-gutters>
         <v-col cols="12" lg="12" class="my-3">
-            <TextField dense label="email" />
+            <TextField required v-model="form.email" dense label="email" />
         </v-col>
         <v-col cols="12" lg="12">
-            <TextField dense label="senha" :hide-details="false" />
+            <TextField required v-model="form.senha" dense label="senha" :hide-details="false" />
         </v-col>
     </v-row>
     <div>
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import Usuario from '@/api/geral/usuario.js'
+
 import StylizedButton from '@/components/StylizedButton.vue'
 
 export default {  
@@ -30,18 +32,28 @@ export default {
     StylizedButton
   },
 
-  data: () => ({ loading: false }),
+  data: () => ({
+    loading: false,
+    form: {email: null, senha: null}
+  }),
 
   methods: {
     async authenticate () {
-      console.log('loading de teste')
-      this.loading = true
+      try {
+        this.loading = true
 
-      await new Promise(resolve => setTimeout(resolve, 1500))
+        const resp = await Usuario.login(this.form)
+        console.log(resp)
+      } catch(err) {
+        console.log(err)
+      } finally {
+        this.loading = false
+      }
+      // await new Promise(resolve => setTimeout(resolve, 1500))
 
 
-      this.loading = false
-      this.$router.push('/home')
+      // this.loading = false
+      // this.$router.push('/home')
     }
   }
 }
