@@ -1,59 +1,25 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import routes from './routes'
+import Cookies from 'js-cookie'
 
 Vue.use(VueRouter)
-
-const routes = [
-  {
-    path: '/auth',
-    name: 'Login',
-    component: () => import(/* webpackChunkName: "Login" */ '../views/Auth/Index')
-  },
-  {
-    path: '/auth/new',
-    name: 'Create-account',
-    component: () => import(/* webpackChunkName: "Login" */ '../views/Auth/Create')
-  },
-  {
-    path: '/',
-    redirect: '/home'
-  },
-  {
-    path: '/stats',
-    name: 'Stats',
-    component: () => import(/* webpackChunkName: "about" */ '../views/StatsView.vue')
-  },
-  {
-    path: '/character',
-    name: 'character',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Character/Index.vue')
-  }, 
-  {
-    path: '/home',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/tasks',
-    name: 'tasks',
-    component: () => import(/* webpackChunkName: "about" */ '../views/tasks/index.vue')
-  },
-  {
-    path: '/shop',
-    name: 'shop',
-    component: () => import(/* webpackChunkName: "about" */ '../views/ShopView.vue')
-  }, 
-  {
-    path: '/about',
-    name: 'about',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }, 
-]
 
 const router = new VueRouter({
   mode: 'history',
   routes
+})
+
+router.beforeEach((to, from, next)=>{
+  const token = Cookies.get('token') || sessionStorage.getItem('token')
+  if (!token && to.meta.group !== 'auth') {
+    next({
+      path: '/auth',
+      replace: true
+    })
+  } else {
+    next()
+  }
 })
 
 export default router

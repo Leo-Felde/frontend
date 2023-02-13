@@ -5,9 +5,9 @@ const methods = {
     return api.post('auth/login', params)
   },
 
-  // cadastro (params) {
-
-  // }
+  cadastro (params) {
+    return api.post('auth/new', params)
+  },
 
   logout () {
     return api.post('auth/logout')
