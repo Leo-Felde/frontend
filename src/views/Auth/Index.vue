@@ -56,8 +56,10 @@ export default {
         }
         const resp = await Auth.login(params)
 
-        Cookies.set('usuario', resp.data.content.usuario)
+        Cookies.set('usuario', JSON.stringify(resp.data.content.usuario))
         Cookies.set('token', resp.data.content.token, { expires: 7 })
+
+        sessionStorage.setItem('tokeusuario', JSON.stringify(resp.data.content.usuario))
         sessionStorage.setItem('token', resp.data.content.token)
 
         this.$router.push('/home')

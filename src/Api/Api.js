@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import Cookies from 'js-cookie'
+import Cookies from 'js-cookie'
 
 let cancel
 
@@ -21,7 +21,7 @@ instance.interceptors.request.use(
     }
 
     // Add authorization header
-    const token = localStorage.getItem('token')
+    const token = Cookies.get('token') || sessionStorage.getItem('token')
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`
     }
