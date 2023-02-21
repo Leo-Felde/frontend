@@ -32,7 +32,7 @@
 
 <script>
 import Habitos from '@/Api/Geral/Habitos' 
-
+import Tarefas from '@/Api/Geral/Tarefas'
 import QuestList from '@/components/QuestList.vue'
 import HabitForm from './habits/Form.vue'
 
@@ -54,6 +54,7 @@ export default {
 
   mounted () {
     this.carregarHabitos()
+    this.carregarTarefas()
   },
 
   methods: {
@@ -68,6 +69,20 @@ export default {
         console.log(err.response)
       } finally {
         this.loadingHabits = false
+      }
+    },
+
+    async carregarTarefas () {
+      this.loadingTasks = true
+      try {
+        const resp = await Tarefas.listar()
+        console.log(resp)
+        this.tasks = resp.data.content
+      } catch (err) {
+        console.log('%cErro no Cadastro:\n', 'color: red')
+        console.log(err.response)
+      } finally {
+        this.loadingTasks = false
       }
     },
 
