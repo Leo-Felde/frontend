@@ -26,15 +26,16 @@
     <StylizedCard black class="px-3 py-2 cardsubtitle"> Missões ativas </StylizedCard>
       <QuestList :items="tasks" />
 
-      <HabitForm v-model="showNewHabitDialog" @newHabit="adicionarHabito" />
+      <HabitForm v-model="showNewHabitDialog" v-if="showNewHabitDialog" @newHabit="adicionarHabito" />
     </StylizedCard>
 </template>
 
 <script>
-import Habitos from '@/Api/Geral/Habitos' 
 import Tarefas from '@/Api/Geral/Tarefas'
-import QuestList from '@/components/QuestList.vue'
+import Habitos from '@/Api/Geral/Habitos'
+
 import HabitForm from './habits/Form.vue'
+import QuestList from '@/components/QuestList.vue'
 
 export default {
   name: 'HomeView',
@@ -52,9 +53,9 @@ export default {
     HabitForm
   },
 
-  mounted () {
-    this.carregarHabitos()
-    this.carregarTarefas()
+  async mounted () {
+    await this.carregarHabitos()
+    await this.carregarTarefas()
   },
 
   methods: {
@@ -62,10 +63,9 @@ export default {
       this.loadingHabits = true
       try {
         const resp = await Habitos.listar()
-        console.log(resp)
         this.habits = resp.data.content
       } catch (err) {
-        console.log('%cErro no Cadastro:\n', 'color: red')
+        console.log('%cErro ao carregar habitos:\n', 'color: red')
         console.log(err.response)
       } finally {
         this.loadingHabits = false
@@ -76,7 +76,6 @@ export default {
       this.loadingTasks = true
       try {
         const resp = await Tarefas.listar()
-        console.log(resp)
         this.tasks = resp.data.content
       } catch (err) {
         console.log('%cErro no Cadastro:\n', 'color: red')

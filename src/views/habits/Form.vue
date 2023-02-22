@@ -178,7 +178,6 @@ export default {
         params.id_usuario = 1 // fazer VUEX de usuário dps :D
 
         const resp = await Habitos.salvar(params)
-        
         console.log(resp)
         // this.$emit('newHabit')
         // this.show = false

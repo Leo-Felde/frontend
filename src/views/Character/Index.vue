@@ -1,13 +1,18 @@
 <template>
   <StylizedCard brown class="ma-4 mt-6" height="90%" >
     <StylizedCard black class="cardtitle px-3 py-2"> Personagem </StylizedCard>
-    <CharacterViewer class="mx-auto"/>
+    <div v-if="loading" class="d-flex-column mt-10">
+      <v-progress-circular color="red darken-2" size="80" width="5" class="mx-auto" indeterminate />
+      <span class="ml-2s"> carregando... </span>
+    </div>
+    <CharacterViewer v-else class="mx-auto"/>
   </StylizedCard>
 </template>
 <script>
+import Usuario from '@/Api/Geral/Usuario'
 
-import StylizedButton from '@/components/StylizedButton'
 import CharacterViewer from '@/components/CharacterViewer'
+import StylizedButton from '@/components/StylizedButton'
 
 export default {  
   name: 'AboutPage',
@@ -18,8 +23,33 @@ export default {
   },
 
   data: () => ({
+    loading: false
+  }),
 
-  })
+  async mounted () {
+    await this.carregarUsuario()
+  },
+
+  methods: {
+    async carregarUsuario () {
+      this.loading = true
+      try {
+        const resp = await Usuario.carregar(this.usuario.id)
+        this.$store.commit('setUsuario', resp.data.content.usuario)
+      } catch (err) {
+        console.log('%cErro ao carregar o usuário:\n', 'color: red')
+        console.log(err.response)
+      } finally {
+        this.loading = false
+      }
+    }
+  },
+
+  computed: {
+    usuario () {
+      return this.$store.state.usuario
+    }
+  }
 }
 </script>
 

@@ -7,6 +7,8 @@ import TextField from '@/components/TextField.vue'
 import StylizedCard from '@/components/layout/StylizedCard.vue'
 import PixelIcon from '@/components/PixelIcon.vue'
 
+import store from '@/store'
+
 Vue.config.productionTip = false
 
 Vue.component('TextField', TextField)
@@ -18,5 +20,6 @@ Vue.use(Vuelidate)
 new Vue({
   vuetify,
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')

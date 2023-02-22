@@ -2,8 +2,8 @@
   <div>
     <!-- INFO -->
     <div id="user-info" class="mt-6">
-      <span class="subtitle-2"> nome_teste lvl.1 </span>
-      <v-progress-linear value="15" height="10px" />
+      <span class="subtitle-2"> {{ usuario.nome }} lvl.{{ usuario.level }} </span>
+      <v-progress-linear :value="usuario.xp" height="10px" />
     </div>
 
     <div id="character_wrapper">
@@ -51,7 +51,6 @@
       <v-color-picker v-else-if="currentPicker === 1" v-model="hairColor" hide-inputs mode="hexa" @update:color="renderCanvas('hair')" class="mx-auto" />
       <v-color-picker v-else-if="currentPicker === 2" v-model="eyeColor"  hide-inputs mode="hexa" @update:color="renderCanvas('eye')" class="mx-auto" />
     </v-dialog>
-    
   </div>
 </template>
 
@@ -70,30 +69,40 @@ export default {
     id: { type: [Number, String], default: undefined } // usar pra carregar as configs dps
   },
 
-  mounted () {
+  created () {
+    this.carregarPersonagem()
+
     setTimeout(() => {
       this.renderCanvas('hair')
       this.renderCanvas('body')
       this.renderCanvas('eye')
-    }, 100)
+    }, 500)
+
   },
 
   computed: {
     currentTabItems () {
       return this.ownedItems[this.inventoryTabs[this.inventoryTab]] || []
+    },
+
+    usuario () {
+      return this.$store.state.usuario
+    },
+
+    personagem () {
+      return JSON.parse(this.$store.state.usuario.personagem)
     }
   },
 
   data: () => ({
     showPicker: false,
-    inventory: false,
-    bodyColor: '#CA977FDE',
-    eyeColor: '#23A52E',
-    hairColor: '#3f3f3f',
-    charHair: 1,
+    bodyColor: null,
+    eyeColor: null,
+    hairColor: null,
+    charHair: null,
     charHead: null,
-    charTop: 'shirt',
-    charBottom: 'black-pants',
+    charTop: null,
+    charBottom: null,
     ownedItems: {
       head: [ 'cultist', 'blue-armor', 'red-armor', 'wills'],
       top: ['cultist', 'blue-armor', 'red-armor', 'wills', 'shirt'],
@@ -106,6 +115,13 @@ export default {
   }),
 
   methods: {
+    carregarPersonagem () {
+      const keys = Object.keys(this.personagem)
+      keys.forEach(key => {
+        this[key] = this.personagem[key]
+      })
+    },
+
     selectHair (number) {
       if (this.charHair === number) return
       this.charHair = number
@@ -113,10 +129,6 @@ export default {
       setTimeout(() => {
         this.renderCanvas('hair')
       }, 100)
-    },
-
-    openInventory () {
-      this.inventory = true
     },
 
     changeHair (action) {

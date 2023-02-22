@@ -55,13 +55,16 @@ export default {
           senha: encode(this.password)
         }
         const resp = await Auth.login(params)
+        const usuario = resp.data.content.usuario
+        const token = resp.data.content.token
 
-        Cookies.set('usuario', JSON.stringify(resp.data.content.usuario))
-        Cookies.set('token', resp.data.content.token, { expires: 7 })
+        Cookies.set('usuario', JSON.stringify(usuario), { expires: 7 })
+        Cookies.set('token', token, { expires: 7 })
 
-        sessionStorage.setItem('tokeusuario', JSON.stringify(resp.data.content.usuario))
-        sessionStorage.setItem('token', resp.data.content.token)
+        sessionStorage.setItem('usuario', JSON.stringify(usuario))
+        sessionStorage.setItem('token', token)
 
+        this.$store.commit('setUsuario', usuario)
         this.$router.push('/home')
       } catch (err) {
         console.log('%cErro no Cadastro:\n', 'color: red')
