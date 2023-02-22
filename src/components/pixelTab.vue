@@ -2,16 +2,18 @@
   <div>
     <v-tabs v-if="bigTabs" v-model="tab" :show-arrows="false" :class="`big-pixel-tabs ${contentClass}`">
       <v-tab v-for="tab in items" :key="tab" class="mx-2">
-        <div v-for="i in 4" :key="i" :class="`big-pixel-tab-deco-${i}`"/>
-        <span v-if= "tab.title"> {{ tab.title }} </span>
-        <v-icon v-if="tab.icon" :icon="tab.icon" />
+        <div v-for="i in 4" :key="i" :class="`pixel-tab-deco-${i}`"/>
+        <span v-if="typeof tab !== 'object'"> {{  tab }} </span>
+        <span v-else-if= "tab.title"> {{ tab.title }} </span>
+        <PixelIcon v-if="tab.icon" :icon="tab.icon" />
       </v-tab>
     </v-tabs>
 
     <v-tabs v-else v-model="tab" :show-arrows="false" :class="`pixel-tabs ${contentClass}`">
       <v-tab v-for="tab in items" :key="tab.title" class="mx-1">
         <div v-for="i in 4" :key="i" :class="`pixel-tab-deco-${i}`"/>
-        <span v-if= "tab.title"> {{ tab.title }} </span>
+        <span v-if="typeof tab !== 'object'"> {{  tab }} </span>
+        <span v-else-if= "tab.title"> {{ tab.title }} </span>
         <PixelIcon v-if="tab.icon" :icon="tab.icon" />
       </v-tab>
     </v-tabs>
@@ -26,7 +28,7 @@ export default {
     bigTabs: Boolean,
     contentClass: { type: String, default: null },
     items: { type: Array, default: undefined },
-    value: { type: Number, default: 0 }
+    value: { type: Number, default: 0 },
   },
   
   watch: {

@@ -28,3 +28,15 @@ html, #app
         .v-btn__content
             display: flex
             flex-direction: column
+
+.v-expansion-panel
+  background: transparent !important
+  &::before
+    box-shadow: none !important
+  &--active
+    margin-top: 0px !important
+    .v-expansion-panel-header--active
+      padding-top: 0px
+
+.self-align-center
+    align-self: center

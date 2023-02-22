@@ -1,19 +1,26 @@
 <template>
-  <StylizedCard class="pa-2 mx-3 mt-6" brown>
+  <StylizedCard class="pa-2 mx-4 mt-6" brown>
     <StylizedCard black class="px-3 py-2 cardtitle"> Hábitos </StylizedCard>
-    <div class="py-2 mt-6" id="habits-container">
+    <div class="py-2 mt-6" id="habits-container" v-if="!loadingHabits">
       <v-btn fab class="mx-2" elevation="0" @click="showNewHabitDialog = true"> 
         <v-icon color="light-green darken-2">mdi-plus</v-icon> 
       </v-btn>
       
       <div v-for="item in habits" :key="item.id" class="habit-container">
         <v-btn fab class="mx-2 darken-2" elevation="0" :color="item.color" long-press="500" @touchstart="touchStart(item)" @touchend="touchEnd(item)">
-          <v-progress-circular :value="item.value" :color="`${item.color} lighten-2`" class="habit-progress" size="60" />
+          <v-progress-circular :value="item.value ? 100 : 0" :color="`${item.color} lighten-2`" class="habit-progress" size="60" />
           <v-icon color="white">{{ item.icon }}</v-icon> 
         </v-btn>
         <span class="habit-title caption">{{ item.title }}</span>
       </div>
     </div>
+    <div class="loading-habits mt-6 py-2" v-else>
+        <div class="d-flex">
+          <v-skeleton-loader v-for="i in 2" :key="i" type="chip" class="mb-2" />
+        </div>
+        <v-progress-linear indeterminate width="100%" />
+      </div>
+
     <v-divider class="mt-6 mb-10"/>
 
     <StylizedCard black class="px-3 py-2 cardsubtitle"> Missões ativas </StylizedCard>
@@ -24,7 +31,8 @@
 </template>
 
 <script>
-// @ is an alias to /src
+import Habitos from '@/Api/Geral/Habitos' 
+import Tarefas from '@/Api/Geral/Tarefas'
 import QuestList from '@/components/QuestList.vue'
 import HabitForm from './habits/Form.vue'
 
@@ -34,8 +42,9 @@ export default {
     press: false,
     pressTime: 0,
     showNewHabitDialog: false,
-    tasks: [{ id: 1, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'blue', expiration: '2023/01/17' }, { id: 2, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'yellow'  }, { id: 3, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'red'  }],
-    habits: [{ id: 1, title: 'debug', icon: 'mdi-bug', color: 'green', value: 0 }]
+    loadingHabits: false,
+    tasks: [{ id: 1, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'blue', expiration: '2023/02/28' }, { id: 2, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'yellow', expiration: '2023/02/02'  }, { id: 3, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'red'  }],
+    habits: []
   }),
 
   components: {
@@ -43,7 +52,40 @@ export default {
     HabitForm
   },
 
+  mounted () {
+    this.carregarHabitos()
+    this.carregarTarefas()
+  },
+
   methods: {
+    async carregarHabitos () {
+      this.loadingHabits = true
+      try {
+        const resp = await Habitos.listar()
+        console.log(resp)
+        this.habits = resp.data.content
+      } catch (err) {
+        console.log('%cErro no Cadastro:\n', 'color: red')
+        console.log(err.response)
+      } finally {
+        this.loadingHabits = false
+      }
+    },
+
+    async carregarTarefas () {
+      this.loadingTasks = true
+      try {
+        const resp = await Tarefas.listar()
+        console.log(resp)
+        this.tasks = resp.data.content
+      } catch (err) {
+        console.log('%cErro no Cadastro:\n', 'color: red')
+        console.log(err.response)
+      } finally {
+        this.loadingTasks = false
+      }
+    },
+
     adicionarHabito (habit) {
       this.habits.push({...habit, value: 0 })
     },
@@ -60,10 +102,6 @@ export default {
     },
 
     toggleItem (item, toggle) {
-      // setTimeout(() => {
-      //   window.navigator.vibrate(300)
-      // }, toggle ? 0 : 1000)
-
       this.habits[this.habits.findIndex(h => h.id === item.id)].value = toggle ? 100 : 0
     },
   }
@@ -108,4 +146,12 @@ export default {
   margin-left: auto
   margin-right: auto
   width: fit-content
+
+.loading-habits
+  width: 100%
+  :deep(.v-skeleton-loader__chip)
+    width: 64px
+    height: 64px
+    border-radius: 50%
+    margin-right: 10px
 </style>

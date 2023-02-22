@@ -14,6 +14,11 @@
     <slot />
   </v-card>
 
+  <v-card v-else-if="light" :class="`light ${contentClass}`" tile :height="height" :width="width">
+    <div v-show="!noBorders" v-for="n in 4" :key="n" :id="`light-border-deco-${n}`" />
+    <slot />
+  </v-card>
+
   <v-card v-else-if="brownDark" :class="`brownDark ${contentClass}`" tile :height="height" :width="width">
     <div v-show="!noBorders" v-for="n in 4" :key="n" :id="`dbrown-border-deco-${n}`" />
     <slot />
@@ -24,18 +29,15 @@
     <div v-show="!noDeco" v-for="n in 2" :key="`inner-${n}`" :id="`paper-inner-deco-${n}`"/>
     <slot />
   </v-card>
-
-  <!-- <v-card v-else-if="paper" :class="`paper ${contentClass}`" tile :height="height">
-    <v-img v-show="!noBorders" src="@/assets/img/redjewelborder.svg" v-for="n in 4" :key="n" :id="`border-deco-${n}`" />
-    <slot/>
-  </v-card> -->
 </template>
 
 <script>
 export default {
   props: {
+    pointer: Boolean,
     black: Boolean,
     brown: Boolean,
+    light: Boolean,
     brownLight: Boolean,
     brownDark: Boolean,
     paper: Boolean,
@@ -44,9 +46,14 @@ export default {
     height: { type: String, default: null },
     width: { type: String, default: null },
     contentClass: { type: String, default: null },
-    color: { type: String, default: null }
+    color: { type: String, default: null },
+  },
 
-  } 
+  computed: {
+    possuiClick () {
+      return !!this.$listeners.click
+    }
+  }
 }
 </script>
 
@@ -173,6 +180,7 @@ export default {
     box-shadow: 3px 3px 0 0 rgba(255,255,255,255), 6px 3px 0 0 rgba(255,255,255,255), 9px 3px 0 0 rgba(255,255,255,255), 12px 3px 0 0 rgba(255,255,255,255), 15px 3px 0 0 rgba(255,255,255,255), 18px 3px 0 0 rgba(255,255,255,255), 21px 3px 0 0 rgba(255,255,255,255), 24px 3px 0 0 rgba(255,255,255,255), 3px 6px 0 0 rgba(53,53,64,255), 6px 6px 0 0 rgba(53,53,64,255), 9px 6px 0 0 rgba(53,53,64,255), 12px 6px 0 0 rgba(53,53,64,255), 15px 6px 0 0 rgba(53,53,64,255), 18px 6px 0 0 rgba(53,53,64,255), 21px 6px 0 0 rgba(53,53,64,255), 24px 6px 0 0 rgba(53,53,64,255), 27px 6px 0 0 rgba(255,255,255,255), 3px 9px 0 0 rgba(168,139,121,1), 6px 9px 0 0 rgba(53,53,64,255), 9px 9px 0 0 rgba(53,53,64,255), 12px 9px 0 0 rgba(53,53,64,255), 15px 9px 0 0 rgba(53,53,64,255), 18px 9px 0 0 rgba(191,184,180,255), 21px 9px 0 0 rgba(53,53,64,255), 24px 9px 0 0 rgba(53,53,64,255), 27px 9px 0 0 rgba(255,255,255,255), 3px 12px 0 0 rgba(168,139,121,1), 6px 12px 0 0 rgba(53,53,64,255), 9px 12px 0 0 rgba(53,53,64,255), 12px 12px 0 0 rgba(53,53,64,255), 15px 12px 0 0 rgba(145,141,141,255), 18px 12px 0 0 rgba(99,97,103,255), 21px 12px 0 0 rgba(145,141,141,255), 24px 12px 0 0 rgba(53,53,64,255), 27px 12px 0 0 rgba(255,255,255,255), 6px 15px 0 0 rgba(168,139,121,1), 9px 15px 0 0 rgba(53,53,64,255), 12px 15px 0 0 rgba(53,53,64,255), 15px 15px 0 0 rgba(53,53,64,255), 18px 15px 0 0 rgba(145,141,141,255), 21px 15px 0 0 rgba(53,53,64,255), 24px 15px 0 0 rgba(53,53,64,255), 27px 15px 0 0 rgba(255,255,255,255), 6px 18px 0 0 rgba(168,139,121,1), 9px 18px 0 0 rgba(53,53,64,255), 12px 18px 0 0 rgba(53,53,64,255), 15px 18px 0 0 rgba(53,53,64,255), 18px 18px 0 0 rgba(53,53,64,255), 21px 18px 0 0 rgba(53,53,64,255), 24px 18px 0 0 rgba(53,53,64,255), 27px 18px 0 0 rgba(255,255,255,255), 9px 21px 0 0 rgba(168,139,121,1), 12px 21px 0 0 rgba(53,53,64,255), 15px 21px 0 0 rgba(53,53,64,255), 18px 21px 0 0 rgba(53,53,64,255), 21px 21px 0 0 rgba(53,53,64,255), 24px 21px 0 0 rgba(53,53,64,255), 27px 21px 0 0 rgba(255,255,255,255), 12px 24px 0 0 rgba(168,139,121,1), 15px 24px 0 0 rgba(168,139,121,1), 18px 24px 0 0 rgba(53,53,64,255), 21px 24px 0 0 rgba(53,53,64,255), 24px 24px 0 0 rgba(53,53,64,255), 27px 24px 0 0 rgba(255,255,255,255), 18px 27px 0 0 rgba(168,139,121,1), 21px 27px 0 0 rgba(168,139,121,1), 24px 27px 0 0 rgba(53,53,64,255), 27px 27px 0 0 rgba(255,255,255,255)
     height: 3px
     width: 3px
+    z-index: 2
     &-1
       @extend #brown-border-deco
       left: $width
@@ -196,12 +204,48 @@ export default {
       -webkit-transform: scaleX(-1) rotate(180deg)
       transform: scaleX(-1) rotate(180deg)
 
+.v-card.light
+  background-color: transparent !important
+  padding: 4px 4px 4px 4px
+  $height: 0px
+  $width: 0px
+  box-shadow: none
+  z-index: 2
+  #light-border-deco
+    position: absolute
+    box-shadow: 6px 3px 0 0 rgb(219,204,193), 9px 3px 0 0 rgb(219,204,193), 12px 3px 0 0 rgb(219,204,193), 15px 3px 0 0 rgb(219,204,193), 18px 3px 0 0 rgb(219,204,193), 3px 6px 0 0 rgb(219,204,193), 6px 6px 0 0 rgb(219,204,193), 3px 9px 0 0 rgb(219,204,193), 3px 12px 0 0 rgb(219,204,193), 3px 15px 0 0 rgb(219,204,193), 3px 18px 0 0 rgb(219,204,193)
+    height: 3px
+    width: 3px
+    &-1
+      @extend #light-border-deco
+      left: $width
+      top: $height
+    &-2
+      @extend #light-border-deco
+      right: $width
+      top: $height
+      -webkit-transform: scaleX(-1)
+      transform: scaleX(-1)
+    &-3
+      @extend #light-border-deco
+      left: $width
+      bottom: $height
+      -webkit-transform: scaleX(-1) rotate(180deg)
+      transform: scaleX(-1) rotate(180deg)
+    &-4
+      @extend #light-border-deco
+      right: $width
+      bottom: $height
+      -webkit-transform: rotate(180deg)
+      transform: rotate(180deg)
+
 .v-card.brownLight
   box-shadow: 0px 0px 0px 3px #4D3F38 inset, 0px 0px 0px 6px rgb(189, 170, 151) inset !important
   background-color: rgb(212, 194, 182) !important
   padding: 4px 4px 4px 4px
   $height: -9px
   $width: 12px
+  z-index: 2
   #lbrown-border-deco
     position: absolute
     box-shadow: 6px 3px 0 0 rgba(77,63,56,255), 9px 3px 0 0 rgba(77,63,56,255), 12px 3px 0 0 rgba(77,63,56,255), 15px 3px 0 0 rgba(77,63,56,255), 18px 3px 0 0 rgba(77,63,56,255), 3px 6px 0 0 rgba(77,63,56,255), 6px 6px 0 0 rgba(169,73,73,255), 9px 6px 0 0 rgba(77,63,56,255), 12px 6px 0 0 rgba(169,73,73,255), 15px 6px 0 0 rgba(209,121,115,255), 18px 6px 0 0 rgba(77,63,56,255), 3px 9px 0 0 rgba(77,63,56,255), 6px 9px 0 0 rgba(77,63,56,255), 9px 9px 0 0 rgba(77,63,56,255), 12px 9px 0 0 rgba(77,63,56,255), 15px 9px 0 0 rgba(169,73,73,255), 18px 9px 0 0 rgba(77,63,56,255), 3px 12px 0 0 rgba(189,170,151,1), 6px 12px 0 0 rgba(77,63,56,255), 9px 12px 0 0 rgba(146,52,70,255), 12px 12px 0 0 rgba(77,63,56,255), 15px 12px 0 0 rgba(77,63,56,255), 18px 12px 0 0 rgba(77,63,56,255), 3px 15px 0 0 rgba(189,170,151,1), 6px 15px 0 0 rgba(77,63,56,255), 9px 15px 0 0 rgba(77,63,56,255), 12px 15px 0 0 rgba(77,63,56,255), 15px 15px 0 0 rgba(169,73,73,255), 18px 15px 0 0 rgba(77,63,56,255), 3px 18px 0 0 rgba(189,170,151,1), 6px 18px 0 0 rgba(189,170,151,1), 9px 18px 0 0 rgba(189,170,151,1), 12px 18px 0 0 rgba(77,63,56,255), 15px 18px 0 0 rgba(77,63,56,255)
@@ -242,6 +286,7 @@ export default {
   $position: 6px
   height: 3px
   width: 3px
+  z-index: 2
   &-1
     @extend #dbrown-border-deco
     left: -$position

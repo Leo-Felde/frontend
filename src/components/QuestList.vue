@@ -8,13 +8,18 @@
         <StylizedCard paper :color="task.color" content-class="d-flex px-3" width="100%" :no-deco="false">
             <v-list-item-content class="mb-2">
                 <v-list-item-title class="d-flex justify-start"> {{ task.title }} <v-icon v-if="task.icon" class="ml-2"> {{ task.icon }} </v-icon> </v-list-item-title>
-                <span class="caption d-flex justify-start">Lorem ipsum dolor sit amet.</span>
+                <span class="caption d-flex justify-start">{{ task.description }}</span>
             </v-list-item-content>
 
-            <span class="d-flex justify-start expiration" v-if="task.expiration"> {{ formatarData(task.expiration) }} <PixelIcon icon="clock" small /> </span>
+            
+            <span class="d-flex justify-start expiration" v-if="task.deadline">
+              {{ formatarData(task.deadline) }}
+              <PixelIcon v-if="aboutToExpire(task.deadline)" icon="clock-alert" small />
+              <PixelIcon v-else icon="clock" small />
+            </span>
             <div class="rewards caption d-flex">
-                <span class="green--text" v-if="task.xp">+{{ task.xp }}xp</span>
-                <span class="orange--text ml-1 text--accent-2 d-flex" v-if="task.money"> {{ task.money }}<PixelIcon icon="coin-stack" x-small class="ml-1"/></span>
+                <span class="green--text" v-if="task.reward_exp">+{{ task.reward_exp }}xp</span>
+                <span class="orange--text ml-1 text--accent-2 d-flex" v-if="task.reward_gold"> {{ task.reward_gold }}<PixelIcon icon="coin-stack" x-small class="ml-1"/></span>
             </div>
         </StylizedCard>
         </v-list-item>
@@ -37,6 +42,16 @@ export default {
     formatarData (date) {
       const dateString = new Date(date).toLocaleDateString('pt-PT')
       return dateString.slice(0, 5)
+    },
+
+    aboutToExpire (date) {
+      const date1 = new Date(date)
+      var now = new Date()
+      
+      var timeDiff = Math.abs(date1.getTime() - now.getTime())
+      var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)) 
+
+      return diffDays <= 1
     }
   }
 }

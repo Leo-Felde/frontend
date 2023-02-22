@@ -67,9 +67,13 @@
 </template>
 
 <script>
+import { encode } from 'js-base64'
+import { required, minLength, email } from 'vuelidate/lib/validators'
+
+import Auth from '@/Api/Geral/Auth'
+
 import StylizedButton from '@/components/StylizedButton.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
-import { required, minLength, email } from 'vuelidate/lib/validators'
 
 export default {  
   name: 'LoginAuth',
@@ -109,10 +113,10 @@ export default {
   computed: {
     form () {
       return {
-        name: this.name,
+        nome: this.name,
         email: this.email,
-        password: this.password,
-        confirmPassword: this.confirmPassword
+        senha: this.password,
+        confirmarSenha: this.confirmPassword
       }
     },
 
@@ -162,16 +166,26 @@ export default {
   
     async submit () {
       this.$v.$touch()
-      console.log(this.$v)
-      if (this.$v.$anyError) return
+      // if (this.$v.$anyError) return
 
       this.loading = true
+      try {
+        const params = {
+          nome: this.name,
+          email: this.email,
+          senha: encode(this.password)
+        }
 
-      await new Promise(resolve => setTimeout(resolve, 1500))
-
-
-      this.loading = false
-      this.$router.push('/auth')
+        await Auth.cadastro(params)
+        setTimeout(() => {
+          this.$router.push('/auth')
+        }, 1000)
+      } catch (err) {
+        console.log('%cErro no Cadastro:\n', 'color: red')
+        console.log(err.response)
+      } finally {
+        this.loading = false
+      }
     },
 
     async cancelar () {

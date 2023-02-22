@@ -5,10 +5,14 @@
     </StylizedCard>
     <v-row cols="12" no-gutters>
         <v-col cols="12" lg="12" class="my-3">
-            <TextField dense label="email" />
+            <TextField v-model="email" dense required label="email" />
         </v-col>
         <v-col cols="12" lg="12">
-            <TextField dense label="senha" :hide-details="false" />
+            <TextField v-model="password" ref="loginPassword" :type="showPassword ? 'text' : 'password'" dense required label="senha" :hide-details="false">
+              <template v-slot:append>
+                <v-btn icon @click="showPassword = !showPassword"> <v-icon> {{showPassword ? 'mdi-eye-off' : 'mdi-eye'}} </v-icon></v-btn>
+              </template>
+            </TextField>
         </v-col>
     </v-row>
     <div>
@@ -22,6 +26,11 @@
 </template>
 
 <script>
+import { encode } from 'js-base64'
+import Cookies from 'js-cookie'
+
+import Auth from '@/Api/Geral/Auth'
+
 import StylizedButton from '@/components/StylizedButton.vue'
 
 export default {  
@@ -30,18 +39,37 @@ export default {
     StylizedButton
   },
 
-  data: () => ({ loading: false }),
+  data: () => ({
+    email: null,
+    password: null,
+    loading: false,
+    showPassword: false
+  }),
 
   methods: {
     async authenticate () {
-      console.log('loading de teste')
       this.loading = true
+      try {
+        const params = {
+          email: this.email,
+          senha: encode(this.password)
+        }
+        const resp = await Auth.login(params)
 
-      await new Promise(resolve => setTimeout(resolve, 1500))
+        Cookies.set('usuario', JSON.stringify(resp.data.content.usuario))
+        Cookies.set('token', resp.data.content.token, { expires: 7 })
 
+        sessionStorage.setItem('tokeusuario', JSON.stringify(resp.data.content.usuario))
+        sessionStorage.setItem('token', resp.data.content.token)
 
-      this.loading = false
-      this.$router.push('/home')
+        this.$router.push('/home')
+      } catch (err) {
+        console.log('%cErro no Cadastro:\n', 'color: red')
+        console.log(err.response)
+      } finally {
+        this.loading = false
+      }
+
     }
   }
 }

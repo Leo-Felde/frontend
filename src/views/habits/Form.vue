@@ -10,9 +10,9 @@
           </StylizedCard>
           <v-divider />
 
-          <v-row no-gutters class="mx-8 mt-1">
+          <v-row no-gutters class="mx-8 mt-4">
             <v-col>
-              <TextField v-model="form.titulo" label="título"/>
+              <TextField v-model="form.title" label="título"/>
             </v-col>
           </v-row>
           <v-divider class="mt-3 mb-2"/>
@@ -36,9 +36,9 @@
           <span class="align-start"> Frequência </span>
           <v-row no-gutters class="mx-8 mt-2">
             <v-col class="d-flex-column">
-              <v-btn-toggle v-model="diasSelecionados" group multiple mandatory tile class="d-flex-column" dense>
+              <v-btn-toggle v-model="form.days" group multiple mandatory tile class="d-flex-column" dense>
                 <StylizedButton v-for="(dia, index) in dias" :key="dia.id" class="mb-5 dia-card" block special>
-                  <v-icon color="green" v-if="diasSelecionados.includes(index)"> mdi-check-bold </v-icon> 
+                  <v-icon color="green" v-if="form.days.includes(index)"> mdi-check-bold </v-icon> 
                   {{ dia.text }}
                 </StylizedButton>
               </v-btn-toggle>
@@ -61,7 +61,7 @@
           </v-row>
 
 
-            <StylizedButton color="blue" @click="adicionarHabito" class="mt-2"> Adicionar habito </StylizedButton>
+            <StylizedButton color="blue" @click="adicionarHabito" class="mt-2" :loading="loading" :disabled="loading"> Adicionar habito </StylizedButton>
             <v-btn text @click="cancelarAdicionarHabito" class="my-2"> cancelar </v-btn>
         </StylizedCard>
       </v-dialog>
@@ -78,13 +78,13 @@
             <StylizedCard brown-light width="100%">
             <v-expansion-panel
               v-for="(item, i) in allIcons"
-              :key="i"
+              :key="`icon-group-${i}`"
             >
               <v-expansion-panel-header>
                 {{ item.category }}
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                <v-btn fab class="ma-1 darken-2" elevation="0" v-for="icon in item.icons" :key="icon" :color="form.color" @click="pickIcon(icon)"> 
+                <v-btn fab class="ma-1 darken-2" elevation="0" v-for="(icon, n) in item.icons" :key="`${item.id}-${n}`" :color="form.color" @click="pickIcon(icon)"> 
                   <v-icon :color="form.color ? 'white' : 'black'"> {{ icon }} </v-icon> 
                 </v-btn>
               </v-expansion-panel-content>
@@ -97,6 +97,9 @@
 </template>
 
 <script>
+import { cloneDeep } from 'lodash-es'
+import Habitos from '@/Api/Geral/Habitos' 
+
 import StylizedButton from '@/components/StylizedButton'
 
 export default {
@@ -108,21 +111,22 @@ export default {
   data: () => ({
     show: false,
     iconPicker: false,
+    loading: false,
+    formOriginal: {days: [0, 1, 2, 3, 4, 5, 6]},
     form: {},
     allColors: ['red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue', 'cyan', 'teal', 'green', 'light-green', 'lime', 'yellow', 'amber', 'orange', 'deep-orange', 'brown', 'blue-grey', 'grey'],
     allIcons: [
-      { category: 'Habbies/Atividades', icons: ['mdi-weight-lifter', 'mdi-run', 'mdi-hiking', 'mdi-skateboarding', 'mdi-karate', 'mdi-meditation', 'mdi-diving', 'mdi-dance-ballroom']},
-      { category: 'Entreterimento', icons: ['mdi-television-speaker', 'mdi-television-play', 'mdi-television-speaker-off', 'mdi-video-box', 'mdi-video', 'mdi-video-off', 'mdi-video-vintage', 
+      { id: 1, category: 'Habbies/Atividades', icons: ['mdi-weight-lifter', 'mdi-run', 'mdi-hiking', 'mdi-skateboarding', 'mdi-karate', 'mdi-meditation', 'mdi-diving', 'mdi-dance-ballroom']},
+      { id: 2, category: 'Entreterimento', icons: ['mdi-television-speaker', 'mdi-television-play', 'mdi-television-speaker-off', 'mdi-video-box', 'mdi-video', 'mdi-video-off', 'mdi-video-vintage', 
         'mdi-movie-open', 'mdi-movie-open-star', 'mdi-movie-open-off', 'mdi-music', 'mdi-music-clef-treble', 'mdi-speaker-wireless'
       ]},
-      { category: 'Jogos', icons: ['mdi-space-invaders', 'mdi-controller', 'mdi-controller-off', 'mdi-nintendo-game-boy', 
+      { id: 3, category: 'Jogos', icons: ['mdi-space-invaders', 'mdi-controller', 'mdi-controller-off', 'mdi-nintendo-game-boy', 
         'mdi-puzzle', 'mdi-dice-5', 'mdi-chess-queen', 'mdi-cards-playing', 'mdi-cards-diamond', 'mdi-cards-spade', 'mdi-cards-heart', 'mdi-cards-club', 'mdi-pokeball', 'mdi-steam'] },
-      { category: 'Animais', icons: ['mdi-dog-service', 'mdi-dog-side', 'mdi-bone', 'mdi-dog', 'mdi-bird', 'mdi-cat', 'mdi-rabbit-variant', 'mdi-fish','mdi-fishbowl', 'mdi-horse', 'mdi-rodent', 'mdi-owl', 'mdi-spider-thread', 'mdi-unicorn-variant'] },
-      { category: 'Pessoas', icons: [ 'mdi-account-tie', 'mdi-account-tie-woman', 'mdi-human-greeting', 'mdi-human-male-board-poll', 'mdi-wheelchair', 'mdi-baby', 'mdi-baby-bottle-outline', 'mdi-human-baby-changing-table', 'mdi-baby-carriage', 'mdi-cradle', 'mdi-human-cane',
+      { id: 4, category: 'Animais', icons: ['mdi-dog-service', 'mdi-dog-side', 'mdi-bone', 'mdi-dog', 'mdi-bird', 'mdi-cat', 'mdi-rabbit-variant', 'mdi-fish','mdi-fishbowl', 'mdi-horse', 'mdi-rodent', 'mdi-owl', 'mdi-spider-thread', 'mdi-unicorn-variant'] },
+      { id: 5, category: 'Pessoas', icons: [ 'mdi-account-tie', 'mdi-account-tie-woman', 'mdi-human-greeting', 'mdi-human-male-board-poll', 'mdi-wheelchair', 'mdi-baby', 'mdi-baby-bottle-outline', 'mdi-human-baby-changing-table', 'mdi-baby-carriage', 'mdi-cradle', 'mdi-human-cane',
         'mdi-face-man', 'mdi-face-man-shimmer', 'mdi-face-woman', 'mdi-face-woman-shimmer'] },    
-      { category: 'Médico', icons: ['mdi-clipboard-pulse', 'mdi-heart-pulse', 'mdi-pulse', 'mdi-stethoscope', 'mdi-hand-wash', 'mdi-lotion', 'mdi-brain', 'mdi-tooth', 'mdi-lungs', 'mdi-medication', 'mdi-needle', 'mdi-pill', 'mdi-emoticon-sick'] },
+      { id: 6, category: 'Médico', icons: ['mdi-clipboard-pulse', 'mdi-heart-pulse', 'mdi-pulse', 'mdi-stethoscope', 'mdi-hand-wash', 'mdi-lotion', 'mdi-brain', 'mdi-tooth', 'mdi-lungs', 'mdi-medication', 'mdi-needle', 'mdi-pill', 'mdi-emoticon-sick'] },
     ],
-    diasSelecionados: [0, 1, 2, 3, 4, 5, 6],
     dias: [
       {id: 'domingo', text: 'Domingo', value: true},
       {id: 'segunda', text: 'Segunda-feira', value: true},
@@ -141,7 +145,8 @@ export default {
   }),
 
   props: {
-    value: Boolean
+    value: Boolean,
+    id: { type: Number, default: undefined }
   },
 
   watch: {
@@ -150,17 +155,41 @@ export default {
     },
   },
 
+  async mounted () {
+    // if (this.id) {
+    //   await this.carregarHabito()
+    // }
+
+    this.form = cloneDeep(this.formOriginal)
+  },
+
   methods: {
     cancelarAdicionarHabito () {
-      this.form = {}
+      this.form = cloneDeep(this.formOriginal)
       this.show = false
       this.$emit('input', false)
     },
 
-    adicionarHabito () {
-      this.$emit('newHabit', this.form)
-      this.show = false
-      this.$emit('input', false)
+    async adicionarHabito () {
+      this.loading = true
+      try {
+        const params = cloneDeep(this.form)
+        params.days = JSON.stringify(params.days)
+        params.id_usuario = 1 // fazer VUEX de usuário dps :D
+
+        const resp = await Habitos.salvar(params)
+        
+        console.log(resp)
+        // this.$emit('newHabit')
+        // this.show = false
+        // this.$emit('input', false)
+      } catch (err) {
+        console.log('%cErro no Cadastro:\n', 'color: red')
+        console.log(err.response)
+      } finally {
+        this.loading = false
+      }
+
     },
 
     pickColor (color) {
@@ -184,7 +213,7 @@ export default {
   position: fixed
   width: 100%
   top: 0px
-  z-index: 1
+  z-index: 3
 
 #color-container
   display: flex
@@ -214,14 +243,6 @@ export default {
 .habit-wrapper
   margin-top: 50px !important
 
-.v-expansion-panel
-  background: transparent !important
-  &::before
-    box-shadow: none !important
-  &--active
-    margin-top: 0px !important
-    .v-expansion-panel-header--active
-      padding-top: 0px
 ::v-deep
   .v-dialog.dialogo-icones
     max-height: 600px !important
@@ -231,7 +252,7 @@ export default {
       height: 100%
       overflow: hidden !important
     .cardtitle
-      z-index: 1
+      z-index: 2
       position: absolute
       top: 0px
       left: 0px
