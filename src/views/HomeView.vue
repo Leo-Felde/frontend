@@ -94,11 +94,21 @@ export default {
   },
 
   methods: {
-    longPress (item) {
+    async longPress (item) {
       const index = this.habits.findIndex(habit => habit.id === item.id)
       if (index < 0) return
       this.habits[index].value = !this.habits[index].value
-      console.log(this.habits[index].value)
+
+      try {
+        const params = {
+          id: item.id,
+          value: this.habits[index].value
+        }
+        
+        await Habitos.salvar(params)
+      } catch (err) {
+        this.$snackbar.showMessage({ content: 'Falha ao editar Hábito', color: 'error' })
+      }
     },
 
     async carregarHabitos () {
@@ -125,14 +135,10 @@ export default {
       }
     },
 
-    toggleItem (item, toggle) {
-      this.habits[this.habits.findIndex(h => h.id === item.id)].value = toggle ? 100 : 0
-    },
-
     editarHabito (habito) {
       this.showEditHabitDialog = false
       this.habitoSelecionado = habito
-      console.log(habito)
+
       this.showNewHabitDialog = true
     },
   }
@@ -142,6 +148,7 @@ export default {
 <style lang="sass" scoped>
 #habits-container
   display: flex
+  min-height: 80px !important
   max-width: inherit
   overflow: hidden
   overflow-x: scroll

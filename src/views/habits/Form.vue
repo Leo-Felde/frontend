@@ -194,6 +194,9 @@ export default {
 
     show () {
       this.$emit('input', this.show)
+      if (!this.habito) {
+        this.form = cloneDeep(this.formOriginal)
+      }
     },
 
     habito () {
