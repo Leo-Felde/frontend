@@ -183,7 +183,7 @@ export default {
         // this.show = false
         // this.$emit('input', false)
       } catch (err) {
-        this.$snackbar.showMessage({ content: 'Falha ao cadastrar habito', color: 'red' })
+        this.$snackbar.showMessage({ content: 'Falha ao cadastrar habito', color: 'error' })
       } finally {
         this.loading = false
       }

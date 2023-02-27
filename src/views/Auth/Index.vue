@@ -131,7 +131,7 @@ export default {
           this.$router.push('/home')
         }
       } catch (err) {
-        this.$snackbar.showMessage({ content: 'Falha ao realizar login', color: 'red' })
+        this.$snackbar.showMessage({ content: 'Falha ao realizar login', color: 'error' })
       } finally {
         this.loading = false
       }

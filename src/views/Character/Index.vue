@@ -38,7 +38,7 @@ export default {
         console.log(resp.data)
         this.$store.commit('usuario/setUsuario', resp.data.content.usuario)
       } catch (err) {
-        this.$snackbar.showMessage({ content: 'Falha ao carregar usuário', color: 'red' })
+        this.$snackbar.showMessage({ content: 'Falha ao carregar usuário', color: 'error' })
       } finally {
         this.loading = false
       }

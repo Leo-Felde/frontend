@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <v-snackbar v-model="show" :color="color" top right>
+    <v-icon v-if="icon"> {{ icon }}</v-icon>
     {{ message }}
   </v-snackbar>
 </template>
@@ -23,6 +24,13 @@ export default {
         this.show = true
       }
     })
+  },
+
+  computed: {
+    icon () {
+      if (this.color === 'error') return 'mdi-alert-circle-outline'
+      return null
+    }
   }
 }
 </script>

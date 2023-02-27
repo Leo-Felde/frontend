@@ -181,7 +181,7 @@ export default {
           this.$router.push('/auth')
         }, 1000)
       } catch (err) {
-        this.$snackbar.showMessage({ content: 'Falha ao cadastrar usuário', color: 'red' })
+        this.$snackbar.showMessage({ content: 'Falha ao cadastrar usuário', color: 'error' })
       } finally {
         this.loading = false
       }

@@ -71,7 +71,7 @@ export default {
         const resp = await Habitos.listar()
         this.habits = resp.data.content
       } catch (err) {
-        this.$snackbar.showMessage({ content: 'Falha ao carregar habitos', color: 'red' })
+        this.$snackbar.showMessage({ content: 'Falha ao carregar habitos', color: 'error' })
       } finally {
         this.loadingHabits = false
       }
@@ -83,7 +83,7 @@ export default {
         const resp = await Tarefas.listar()
         this.tasks = resp.data.content
       } catch (err) {
-        this.$snackbar.showMessage({ content: 'Falha ao carregar tarefas', color: 'red' })
+        this.$snackbar.showMessage({ content: 'Falha ao carregar tarefas', color: 'error' })
       } finally {
         this.loadingTasks = false
       }
