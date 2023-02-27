@@ -1,5 +1,5 @@
 <template>
-    <v-list v-if="items.length">
+    <v-list v-if="items.length" class="pt-0">
         <v-list-item
         v-for="task in items"
         :key="task.id"
@@ -58,8 +58,6 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-
-
 .rewards
     position: absolute
     bottom: 0px
@@ -69,4 +67,7 @@ export default {
     top: 0px
     right: 5px
     font-size: 0.9rem
+
+.v-list
+  overflow-y: scroll
 </style>

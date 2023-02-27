@@ -6,10 +6,12 @@ import router from './router'
 import TextField from '@/components/TextField.vue'
 import StylizedCard from '@/components/layout/StylizedCard.vue'
 import PixelIcon from '@/components/PixelIcon.vue'
+import snackbarPlugin from './plugins/snackbar'
 
 import store from '@/store'
 
 Vue.config.productionTip = false
+Vue.use(snackbarPlugin, { store })
 
 Vue.component('TextField', TextField)
 Vue.component('StylizedCard', StylizedCard)

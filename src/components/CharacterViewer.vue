@@ -86,11 +86,11 @@ export default {
     },
 
     usuario () {
-      return this.$store.state.usuario
+      return this.$store.state.usuario.dados
     },
 
     personagem () {
-      return JSON.parse(this.$store.state.usuario.personagem)
+      return JSON.parse(this.$store.state.usuario.dados.personagem)
     }
   },
 
@@ -152,14 +152,11 @@ export default {
     },
 
     colorPick (which) {
-      console.log(which)
       this.currentPicker = this.colorPickers.indexOf(which)
-      console.log(this.currentPicker)
       this.showPicker = true
     },
     
     selectItem (bPart, item) {
-      console.log(`equip ${item} on ${bPart}`)
       const capitalizedBP = bPart.charAt(0).toUpperCase() + bPart.slice(1)
       if (this[`char${capitalizedBP}`] === item) this[`char${capitalizedBP}`] = null
       else this[`char${capitalizedBP}`] = item

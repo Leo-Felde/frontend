@@ -35,10 +35,10 @@ export default {
       this.loading = true
       try {
         const resp = await Usuario.carregar(this.usuario.id)
-        this.$store.commit('setUsuario', resp.data.content.usuario)
+        console.log(resp.data)
+        this.$store.commit('usuario/setUsuario', resp.data.content.usuario)
       } catch (err) {
-        console.log('%cErro ao carregar o usuário:\n', 'color: red')
-        console.log(err.response)
+        this.$snackbar.showMessage({ content: 'Falha ao carregar usuário', color: 'red' })
       } finally {
         this.loading = false
       }
@@ -47,7 +47,7 @@ export default {
 
   computed: {
     usuario () {
-      return this.$store.state.usuario
+      return this.$store.state.usuario.dados
     }
   }
 }

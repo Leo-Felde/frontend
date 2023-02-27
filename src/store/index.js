@@ -3,14 +3,12 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  state: {
-    usuario: null
-  },
+import usuario from './modules/usuario'
+import snackbar from './modules/snackbar'
 
-  mutations: {
-    setUsuario (state, payload) {
-      state.usuario = payload
-    }
+export default new Vuex.Store({
+  modules: {
+    usuario: usuario,
+    snackbar: snackbar
   }
 })

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-tabs v-if="bigTabs" v-model="tab" :show-arrows="false" :class="`big-pixel-tabs ${contentClass}`">
-      <v-tab v-for="tab in items" :key="tab" class="mx-2">
+      <v-tab v-for="tab in items" :key="tab.title" class="mx-2">
         <div v-for="i in 4" :key="i" :class="`pixel-tab-deco-${i}`"/>
         <span v-if="typeof tab !== 'object'"> {{  tab }} </span>
         <span v-else-if= "tab.title"> {{ tab.title }} </span>

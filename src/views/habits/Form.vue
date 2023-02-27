@@ -183,8 +183,7 @@ export default {
         // this.show = false
         // this.$emit('input', false)
       } catch (err) {
-        console.log('%cErro no Cadastro:\n', 'color: red')
-        console.log(err.response)
+        this.$snackbar.showMessage({ content: 'Falha ao cadastrar habito', color: 'red' })
       } finally {
         this.loading = false
       }

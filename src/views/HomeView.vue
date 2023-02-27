@@ -1,12 +1,12 @@
 <template>
-  <StylizedCard class="pa-2 mx-4 mt-6" brown>
+  <StylizedCard class="pa-2" brown>
     <StylizedCard black class="px-3 py-2 cardtitle"> Hábitos </StylizedCard>
     <div class="py-2 mt-6" id="habits-container" v-if="!loadingHabits">
       <v-btn fab class="mx-2" elevation="0" @click="showNewHabitDialog = true"> 
         <v-icon color="light-green darken-2">mdi-plus</v-icon> 
       </v-btn>
       
-      <div v-for="item in habits" :key="item.id" class="habit-container">
+      <div v-for="item in habits" :key="item.id" class="habit-container pb-12">
         <v-btn fab class="mx-2 darken-2" elevation="0" :color="item.color" long-press="500" @touchstart="touchStart(item)" @touchend="touchEnd(item)">
           <v-progress-circular :value="item.value ? 100 : 0" :color="`${item.color} lighten-2`" class="habit-progress" size="60" />
           <v-icon color="white">{{ item.icon }}</v-icon> 
@@ -24,7 +24,12 @@
     <v-divider class="mt-6 mb-10"/>
 
     <StylizedCard black class="px-3 py-2 cardsubtitle"> Missões ativas </StylizedCard>
-      <QuestList :items="tasks" />
+
+      <div v-if="loadingTasks" class="loading-tasks">
+        <v-skeleton-loader v-for="i in 2" :key="i" type="text" class="mb-2" />
+      </div>
+
+      <QuestList v-else :items="tasks" />
 
       <HabitForm v-model="showNewHabitDialog" v-if="showNewHabitDialog" @newHabit="adicionarHabito" />
     </StylizedCard>
@@ -43,8 +48,9 @@ export default {
     press: false,
     pressTime: 0,
     showNewHabitDialog: false,
-    loadingHabits: false,
-    tasks: [{ id: 1, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'blue', expiration: '2023/02/28' }, { id: 2, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'yellow', expiration: '2023/02/02'  }, { id: 3, icon: 'mdi-sword', title: 'debug', xp: 20, money: 10, color: 'red'  }],
+    loadingHabits: true,
+    loadingTasks: true,
+    tasks: [],
     habits: []
   }),
 
@@ -65,8 +71,7 @@ export default {
         const resp = await Habitos.listar()
         this.habits = resp.data.content
       } catch (err) {
-        console.log('%cErro ao carregar habitos:\n', 'color: red')
-        console.log(err.response)
+        this.$snackbar.showMessage({ content: 'Falha ao carregar habitos', color: 'red' })
       } finally {
         this.loadingHabits = false
       }
@@ -78,8 +83,7 @@ export default {
         const resp = await Tarefas.listar()
         this.tasks = resp.data.content
       } catch (err) {
-        console.log('%cErro no Cadastro:\n', 'color: red')
-        console.log(err.response)
+        this.$snackbar.showMessage({ content: 'Falha ao carregar tarefas', color: 'red' })
       } finally {
         this.loadingTasks = false
       }
@@ -153,4 +157,10 @@ export default {
     height: 64px
     border-radius: 50%
     margin-right: 10px
+
+.loading-tasks
+  :deep(.v-skeleton-loader__text)
+    height: 79px
+    margin-left: 5px
+    margin-right: 5px
 </style>

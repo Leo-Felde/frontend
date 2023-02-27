@@ -1,5 +1,5 @@
 <template>
-  <StylizedCard brown ref="form" class="mx-auto pa-5 pt-8 vertical-center" :width="this.$vuetify.breakpoint.smAndDown ? '85%' : '350px'">
+  <StylizedCard brown ref="form" class="mx-auto pa-5 pt-8 vertical-center" :width="this.$vuetify.breakpoint.smAndDown ? '90%' : '350px'">
     <StylizedCard black class="title-card px-5 py-1">
        Nova conta
     </StylizedCard>
@@ -166,7 +166,7 @@ export default {
   
     async submit () {
       this.$v.$touch()
-      // if (this.$v.$anyError) return
+      if (this.$v.$anyError) return
 
       this.loading = true
       try {
@@ -181,8 +181,7 @@ export default {
           this.$router.push('/auth')
         }, 1000)
       } catch (err) {
-        console.log('%cErro no Cadastro:\n', 'color: red')
-        console.log(err.response)
+        this.$snackbar.showMessage({ content: 'Falha ao cadastrar usuário', color: 'red' })
       } finally {
         this.loading = false
       }

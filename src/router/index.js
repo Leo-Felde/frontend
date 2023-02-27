@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import routes from './routes'
 import Cookies from 'js-cookie'
-import store from '@/store'
+// import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -20,10 +20,10 @@ router.beforeEach((to, from, next)=>{
       replace: true
     })
   } else {
-    const storedUsuario = store.state.usuario
-    if (!storedUsuario){
-      store.commit('setUsuario', JSON.parse(usuario))
-    }
+    // const storedUsuario = store.state.usuario
+    // if (!storedUsuario){
+    //   store.commit('setUsuario', JSON.parse(usuario))
+    // }
 
     next()
   }

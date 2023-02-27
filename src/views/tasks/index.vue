@@ -1,5 +1,5 @@
 <template>
-    <StylizedCard brown class="pa-2 pt-10 mx-4 mt-6 wrapper">
+    <StylizedCard brown class="pa-2 pt-10 wrapper">
       <StylizedCard black class="px-3 py-2 cardtitle"> Missões </StylizedCard>
       <!-- <v-card-title class="justify-center"> Missões </v-card-title> -->
       <!-- <div class="d-flex">
