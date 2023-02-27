@@ -8,12 +8,15 @@
       <div :id="`${loginRoute ? 'login-' : ''}view-box`" class="px-4 pt-6">
         <router-view class="router-view"/>
       </div>
+
       <Snackbar />
+      <ConfirmDialog ref="confirm" />
       <NavigationProvider v-show="!loginRoute" v-model="navDrawer" />
 </v-app>
 </template>
 
 <script>
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import NavigationProvider from '@/components/layout/NavigationProvider.vue'
 import Snackbar from '@/components/template/Snackbar.vue'
 
@@ -21,6 +24,7 @@ export default {
   name: 'App',
 
   components: {
+    ConfirmDialog,
     NavigationProvider,
     Snackbar
   },
@@ -28,6 +32,15 @@ export default {
   data: () => ({
     navDrawer: false
   }),
+
+  mounted () {
+    if (!this.$vuetify.breakpoint.smAndDown) {
+      this.$refs.confirm.open(
+        'Alerta de exibição',
+        'Esse aplicativo é melhor visualizado em dispositivos mobile'
+      )
+    }
+  },
 
   computed: {
     loginRoute () {
@@ -53,7 +66,6 @@ export default {
   height: 100%
   background-color: #a94949
 
-
 #view-box
   height: 100%
   max-height: calc(100vh - 56px)
@@ -68,4 +80,7 @@ export default {
   max-height: 95%
   display: flex !important
   flex-direction: column
+  max-width: 500px !important
+  margin-left: auto
+  margin-right: auto
 </style>

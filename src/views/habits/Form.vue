@@ -12,7 +12,15 @@
 
           <v-row no-gutters class="mx-8 mt-4">
             <v-col>
-              <TextField v-model="form.title" label="título"/>
+              <TextField
+                v-model="form.title"
+                ref="title"
+                label="título"
+                required
+                :error-messages="titleErrors"
+                :hide-details="false"
+                @blur="$v.title.$touch()"
+              />
             </v-col>
           </v-row>
           <v-divider class="mt-3 mb-2"/>
@@ -38,7 +46,7 @@
             <v-col class="d-flex-column">
               <v-btn-toggle v-model="form.days" group multiple mandatory tile class="d-flex-column" dense>
                 <StylizedButton v-for="(dia, index) in dias" :key="dia.id" class="mb-5 dia-card" block special>
-                  <v-icon color="green" v-if="form.days.includes(index)"> mdi-check-bold </v-icon> 
+                  <v-icon color="green" v-show="form.days.includes(index)"> mdi-check-bold </v-icon> 
                   {{ dia.text }}
                 </StylizedButton>
               </v-btn-toggle>
@@ -97,8 +105,10 @@
 </template>
 
 <script>
-import { cloneDeep } from 'lodash-es'
 import Habitos from '@/Api/Geral/Habitos' 
+
+import { cloneDeep } from 'lodash-es'
+import { required, minLength } from 'vuelidate/lib/validators'
 
 import StylizedButton from '@/components/StylizedButton'
 
@@ -112,8 +122,8 @@ export default {
     show: false,
     iconPicker: false,
     loading: false,
-    formOriginal: {days: [0, 1, 2, 3, 4, 5, 6]},
-    form: {},
+    formOriginal: { color: 'red', days: [0, 1, 2, 3, 4, 5, 6]},
+    form: { color: 'red', days: [] },
     allColors: ['red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue', 'cyan', 'teal', 'green', 'light-green', 'lime', 'yellow', 'amber', 'orange', 'deep-orange', 'brown', 'blue-grey', 'grey'],
     allIcons: [
       { id: 1, category: 'Habbies/Atividades', icons: ['mdi-weight-lifter', 'mdi-run', 'mdi-hiking', 'mdi-skateboarding', 'mdi-karate', 'mdi-meditation', 'mdi-diving', 'mdi-dance-ballroom']},
@@ -144,6 +154,27 @@ export default {
     ]
   }),
 
+  validations: {
+    title: {
+      required,
+      minLength: minLength(5)
+    }
+  },
+
+  computed: {
+    title () {
+      return this.form.title
+    },
+
+    titleErrors () {
+      const errors = []
+      if (!this.$v.title.$dirty) return errors
+      !this.$v.title.minLength && errors.push('Deve ter no mínimo 6 characteres')
+      !this.$v.title.required && errors.push('Campo obrigatório.')
+      return errors
+    },
+  },
+
   props: {
     value: Boolean,
     id: { type: Number, default: undefined }
@@ -153,24 +184,31 @@ export default {
     value (value) {
       this.show = value
     },
+
+    show () {
+      this.$emit('input', this.show)
+    }
   },
 
   async mounted () {
     // if (this.id) {
     //   await this.carregarHabito()
     // }
-
+    this.$v.$reset()
     this.form = cloneDeep(this.formOriginal)
   },
 
   methods: {
     cancelarAdicionarHabito () {
+      this.$v.$reset()
       this.form = cloneDeep(this.formOriginal)
       this.show = false
-      this.$emit('input', false)
     },
 
     async adicionarHabito () {
+      this.$v.$touch()
+      if (this.$v.$anyError) return
+
       this.loading = true
       try {
         const params = cloneDeep(this.form)
@@ -179,9 +217,9 @@ export default {
 
         const resp = await Habitos.salvar(params)
         console.log(resp)
-        // this.$emit('newHabit')
-        // this.show = false
-        // this.$emit('input', false)
+        this.$emit('newHabit')
+        this.show = false
+        this.$snackbar.showMessage({ content: 'Habito cadastrado com sucesso', color: 'green' })
       } catch (err) {
         this.$snackbar.showMessage({ content: 'Falha ao cadastrar habito', color: 'error' })
       } finally {

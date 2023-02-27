@@ -1,6 +1,6 @@
 <template>
     <v-card
-    class="mx-4 my-auto text-center"
+    class="text-center"
     color="green"
     dark
     max-width="600"

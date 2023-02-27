@@ -67,6 +67,7 @@ export default {
     background: #86735b !important
     box-shadow: 0px 0px 0px 3px #353540 inset, 0px 7px 0px 0px #7e674c inset !important
     margin-bottom: 0px
+
 #tf-deco
   position: absolute
   box-shadow: 3px 3px 0 0 rgba(53,53,64,255), 6px 3px 0 0 rgba(255,255,255,255), 3px 6px 0 0 rgba(53,53,64,255), 6px 6px 0 0 rgba(53,53,64,255), 9px 6px 0 0 rgba(255,255,255,255), 3px 9px 0 0 rgba(53,53,64,255), 6px 9px 0 0 rgba(53,53,64,255), 9px 9px 0 0 rgba(255,255,255,255), 3px 12px 0 0 rgba(53,53,64,255), 6px 12px 0 0 rgba(255,255,255,255)
@@ -82,4 +83,9 @@ export default {
     @extend #tf-deco
     right: 0px
     top: 32%
+
+.v-input:not(.v-input--dense)
+  &:deep(.v-text-field__details)
+    padding-top: 4px !important
+    margin-bottom: 0px !important
 </style>

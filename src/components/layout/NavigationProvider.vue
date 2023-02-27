@@ -1,55 +1,24 @@
 <template>
-  <div>
-    <v-navigation-drawer v-model="drawer" temporary absolute v-if="!this.$vuetify.breakpoint.smAndDown">
-        <v-list-item>
-          <v-list-item-avatar>
-            <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>John Leider</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-    <v-divider/>
-    <v-list dense>
-        <v-list-item
-        v-for="item in items"
-        :key="item.title"
-        link
-        :to="item.to"
-        >
-        <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-        </v-list-item-icon>
+  <v-bottom-navigation v-model="tab" color="#000" fixed id="navigation">
+    <v-img src="@/assets/img/navdeco1.svg" id="nav-deco-middle" />
+    <v-img :src="require(`@/assets/img/navdecocorner.svg`)" v-for="n in 4" :key="n" :id="`corner-deco-${n}`" />
 
-        <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item-content>
-        </v-list-item>
-    </v-list>
-    </v-navigation-drawer>
-
-    <!-- navegação mobile -->
-    <v-bottom-navigation v-else v-model="tab" color="#000" fixed id="navigation">
-      <v-img src="@/assets/img/navdeco1.svg" id="nav-deco-middle" />
-      <v-img :src="require(`@/assets/img/navdecocorner.svg`)" v-for="n in 4" :key="n" :id="`corner-deco-${n}`" />
-
-      <v-btn value="avatar" to="/character">
-        <v-icon> mdi-human-male-height </v-icon>
-      </v-btn>
-      <v-btn value="stats" to="/stats">
-        <v-icon> mdi-chart-bar </v-icon>
-      </v-btn>
-      <v-btn value="home" to="/home" id="main-nav">
-        <v-icon large> mdi-view-dashboard-outline </v-icon>
-      </v-btn>
-      <v-btn value="tasks" to="/tasks">
-        <v-icon> mdi-format-list-checkbox </v-icon>
-      </v-btn>
-      <v-btn value="shop" to="/shop">
-        <v-icon> mdi-basket </v-icon>
-      </v-btn>
-    </v-bottom-navigation>
-  </div>
+    <v-btn value="avatar" to="/character">
+      <v-icon> mdi-account-circle </v-icon>
+    </v-btn>
+    <v-btn value="stats" to="/stats">
+      <v-icon> mdi-calendar-clock </v-icon>
+    </v-btn>
+    <v-btn value="home" to="/home" id="main-nav">
+      <v-icon large> mdi-view-dashboard-outline </v-icon>
+    </v-btn>
+    <v-btn value="tasks" to="/tasks">
+      <v-icon> mdi-format-list-group-plus </v-icon>
+    </v-btn>
+    <v-btn value="shop" to="/shop">
+      <v-icon> mdi-cart-minus </v-icon>
+    </v-btn>
+  </v-bottom-navigation>
 </template>
 
 <script>

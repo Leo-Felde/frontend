@@ -1,5 +1,5 @@
 <template>
-    <StylizedCard brown class="px-4 pb-2 pt-7 mt-6 mx-4">
+    <StylizedCard brown class="px-4 pb-2 pt-7">
       <StylizedCard black class="px-3 py-2 cardtitle"> Lojinha </StylizedCard>
       <v-row cols="12">
         <v-col cols="4">

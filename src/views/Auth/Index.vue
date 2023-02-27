@@ -124,9 +124,6 @@ export default {
           Cookies.set('usuario', JSON.stringify(usuario), { expires: 7 })
           Cookies.set('token', token, { expires: 7 })
 
-          sessionStorage.setItem('usuario', JSON.stringify(usuario))
-          sessionStorage.setItem('token', token)
-
           this.$store.commit('usuario/setUsuario', usuario)
           this.$router.push('/home')
         }

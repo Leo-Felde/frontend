@@ -7,7 +7,7 @@
       </v-btn>
       
       <div v-for="item in habits" :key="item.id" class="habit-container pb-12">
-        <v-btn fab class="mx-2 darken-2" elevation="0" :color="item.color" long-press="500" @touchstart="touchStart(item)" @touchend="touchEnd(item)">
+        <v-btn fab class="mx-2 darken-2" elevation="0" :color="item.color" v-longclick="() => longPress(item)">
           <v-progress-circular :value="item.value ? 100 : 0" :color="`${item.color} lighten-2`" class="habit-progress" size="60" />
           <v-icon color="white">{{ item.icon }}</v-icon> 
         </v-btn>
@@ -31,7 +31,7 @@
 
       <QuestList v-else :items="tasks" />
 
-      <HabitForm v-model="showNewHabitDialog" v-if="showNewHabitDialog" @newHabit="adicionarHabito" />
+      <HabitForm v-model="showNewHabitDialog" @newHabit="carregarHabitos" />
     </StylizedCard>
 </template>
 
@@ -45,8 +45,6 @@ import QuestList from '@/components/QuestList.vue'
 export default {
   name: 'HomeView',
   data: () => ({
-    press: false,
-    pressTime: 0,
     showNewHabitDialog: false,
     loadingHabits: true,
     loadingTasks: true,
@@ -65,6 +63,13 @@ export default {
   },
 
   methods: {
+    longPress (item) {
+      const index = this.habits.findIndex(habit => habit.id === item.id)
+      if (index < 0) return
+      this.habits[index].value = !this.habits[index].value
+      console.log(this.habits[index].value)
+    },
+
     async carregarHabitos () {
       this.loadingHabits = true
       try {
@@ -87,21 +92,6 @@ export default {
       } finally {
         this.loadingTasks = false
       }
-    },
-
-    adicionarHabito (habit) {
-      this.habits.push({...habit, value: 0 })
-    },
-
-    touchStart () {
-      console.log('touchStart')
-      this.touch = true
-      
-    },
-
-    touchEnd () {
-      console.log('touchEnd')
-      this.touch = false
     },
 
     toggleItem (item, toggle) {

@@ -2,7 +2,9 @@
   <div>
     <!-- INFO -->
     <div id="user-info" class="mt-6">
-      <span class="subtitle-2"> {{ usuario.nome }} lvl.{{ usuario.level }} </span>
+      <span class="subtitle-2">
+        <v-btn icon @click="$emit('logout')"> <v-icon> mdi-logout </v-icon> sair </v-btn>
+        {{ usuario.nome }} lvl.{{ usuario.level }} </span>
       <v-progress-linear :value="usuario.xp" height="10px" />
     </div>
 
@@ -194,11 +196,18 @@ export default {
   margin-right: auto
 
 #user-info
-  max-width: 40vw
   width: 100%
   position: relative
   margin-left: auto
   margin-right: auto
+  .v-progress-linear
+    width: 200px !important
+    margin-left: auto
+    margin-right: auto
+  .v-btn
+    position: absolute
+    left: 20px
+    top: -7px
 
 #color-btns
   position: absolute

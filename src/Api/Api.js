@@ -21,7 +21,7 @@ instance.interceptors.request.use(
     }
 
     // Add authorization header
-    const token = Cookies.get('token') || sessionStorage.getItem('token')
+    const token = Cookies.get('token')
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`
     }
