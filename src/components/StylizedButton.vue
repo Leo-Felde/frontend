@@ -146,6 +146,26 @@ export default {
       @extend #pixel-btn-border-deco-4
       @include corners("#2a6b32")
 
+.red-btn.v-btn
+  @extend .pixel-btn
+  outline: 3px solid white
+  background-color: #D21919 !important
+  box-shadow: 0px 4px 0px 0px #E51E1E inset, 0px -4px 0px 0px #C01515 inset !important
+  #btn-red-border-deco
+    @extend #pixel-btn-border-deco
+    &-1
+      @extend #pixel-btn-border-deco-1
+      @include corners("#E51E1E")
+    &-2
+      @extend #pixel-btn-border-deco-2
+      @include corners("#E51E1E")
+    &-3
+      @extend #pixel-btn-border-deco-3
+      @include corners("#C01515")
+    &-4
+      @extend #pixel-btn-border-deco-4
+      @include corners("#C01515")
+
 .grey-btn.v-btn
   @extend .pixel-btn
   pointer-events: none

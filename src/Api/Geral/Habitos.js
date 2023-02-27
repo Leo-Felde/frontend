@@ -10,6 +10,10 @@ const methods = {
     return api.post(`${prefix}/salvar`, params)
   },
 
+  excluir (id) {
+    return api.delete(`${prefix}/excluir/${id}`)
+  },
+
   carregar (id) {
     return api.get(`${prefix}/carregar/${id}`)
   }

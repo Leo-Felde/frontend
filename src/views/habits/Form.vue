@@ -68,8 +68,10 @@
             </v-btn-toggle>
           </v-row>
 
-
-            <StylizedButton color="blue" @click="adicionarHabito" class="mt-2" :loading="loading" :disabled="loading"> Adicionar habito </StylizedButton>
+            <div class="d-flex justify-space-around mt-2">
+              <StylizedButton v-if="habito" color="red" @click="excluirHabito" :loading="loading" :disabled="loading"> Excluir </StylizedButton>
+              <StylizedButton color="blue" @click="adicionarHabito" :loading="loading" :disabled="loading"> {{ habito ? 'Editar habito': 'Adicionar habito' }} </StylizedButton>
+            </div>
             <v-btn text @click="cancelarAdicionarHabito" class="my-2"> cancelar </v-btn>
         </StylizedCard>
       </v-dialog>
@@ -101,6 +103,8 @@
           </v-expansion-panels>
         </StylizedCard>
       </v-dialog>
+
+      <ConfirmDialog ref="confirm" />
     </div>
 </template>
 
@@ -110,11 +114,13 @@ import Habitos from '@/Api/Geral/Habitos'
 import { cloneDeep } from 'lodash-es'
 import { required, minLength } from 'vuelidate/lib/validators'
 
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import StylizedButton from '@/components/StylizedButton'
 
 export default {
   name: 'HabitsDialog',
   components: {
+    ConfirmDialog,
     StylizedButton
   },
 
@@ -177,7 +183,8 @@ export default {
 
   props: {
     value: Boolean,
-    id: { type: Number, default: undefined }
+    id: { type: Number, default: undefined },
+    habito: { type: Object, default: undefined },
   },
 
   watch: {
@@ -187,6 +194,10 @@ export default {
 
     show () {
       this.$emit('input', this.show)
+    },
+
+    habito () {
+      this.form = this.habito
     }
   },
 
@@ -213,19 +224,37 @@ export default {
       try {
         const params = cloneDeep(this.form)
         params.days = JSON.stringify(params.days)
-        params.id_usuario = 1 // fazer VUEX de usuário dps :D
+        params.id_usuario = this.$store.state.usuario.dados.id
 
-        const resp = await Habitos.salvar(params)
-        console.log(resp)
+        await Habitos.salvar(params)
         this.$emit('newHabit')
         this.show = false
-        this.$snackbar.showMessage({ content: 'Habito cadastrado com sucesso', color: 'green' })
+        this.$snackbar.showMessage({ content: 'Hábito cadastrado com sucesso', color: 'green' })
       } catch (err) {
-        this.$snackbar.showMessage({ content: 'Falha ao cadastrar habito', color: 'error' })
+        this.$snackbar.showMessage({ content: 'Falha ao cadastrar Hábito', color: 'error' })
       } finally {
         this.loading = false
       }
+    },
 
+    async excluirHabito () {
+      if (!await this.$refs.confirm.open(
+        'Excluir Hábito',
+        'Tem certeza que deseja excluir este hábito?'
+      )) return
+
+      this.loading = true
+      try {
+        await Habitos.excluir(this.form.id)
+
+        this.$emit('newHabit')
+        this.show = false
+        this.$snackbar.showMessage({ content: 'Hábito excluído com sucesso', color: 'green' })
+      } catch (err) {
+        this.$snackbar.showMessage({ content: 'Falha ao excluir Hábito', color: 'error' })
+      } finally {
+        this.loading = false
+      }
     },
 
     pickColor (color) {
