@@ -32,7 +32,7 @@
       <v-skeleton-loader v-for="i in 2" :key="i" type="text" class="mb-2" />
     </div>
 
-    <QuestList v-else :items="tasks" />
+    <QuestList v-else :items="tasks" @click="concluirTarefa" />
     <HabitForm v-model="showNewHabitDialog" @newHabit="carregarHabitos" :habito="habitoSelecionado" />
 
     <v-dialog v-model="showEditHabitDialog">
@@ -79,6 +79,7 @@ export default {
     loadingHabits: true,
     loadingTasks: true,
     habitoSelecionado: null,
+    taerfaSelecionada: null,
     tasks: [],
     habits: []
   }),
@@ -94,6 +95,21 @@ export default {
   },
 
   methods: {
+    async concluirTarefa (tarefa) {
+      this.tarefaSelecionada = tarefa
+      const params = { 
+        id_tarefa: this.tarefaSelecionada.id_tarefa,
+        id_usuario: this.tarefaSelecionada.id_usuario,
+        status: !this.tarefaSelecionada.status
+      }
+      console.log('params')
+      console.log(params)
+      if(confirm('Deseja concluir a tarefa? ') == true){
+        await Tarefas.concluirTarefa(params)
+        await this.carregarTarefas()
+      }
+    },
+
     async longPress (item) {
       const index = this.habits.findIndex(habit => habit.id === item.id)
       if (index < 0) return
@@ -126,8 +142,9 @@ export default {
     async carregarTarefas () {
       this.loadingTasks = true
       try {
-        const resp = await Tarefas.listar()
-        this.tasks = resp.data.content
+        const idUsuario = this.$store.state.usuario.dados.id
+        const resp = await Tarefas.carregar(idUsuario)
+        this.tasks = resp.data.content.tarefas
       } catch (err) {
         this.$snackbar.showMessage({ content: 'Falha ao carregar tarefas', color: 'error' })
       } finally {
@@ -141,6 +158,8 @@ export default {
 
       this.showNewHabitDialog = true
     },
+
+
   }
 }
 </script>

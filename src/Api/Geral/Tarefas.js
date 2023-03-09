@@ -12,6 +12,14 @@ const methods = {
 
   carregar (id) {
     return api.get(`${prefix}/carregar/${id}`)
+  },
+  
+  concluirTarefa (params) {
+    return api.post(`${prefix}/concluirTarefa`, params)
+  },
+
+  vincularTarefa (params) {
+    return api.post(`${prefix}/vincularTarefa`, params)
   }
 }
 

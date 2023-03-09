@@ -4,8 +4,8 @@
         v-for="task in items"
         :key="task.id"
         class="my-2 px-1"
-        >
-        <StylizedCard paper :color="task.color" content-class="d-flex px-3" width="100%" :no-deco="false">
+        @click="$emit('click', task)">
+        <StylizedCard paper :color="!task.color ? getColorById(task.id_category) : 'yellow'" content-class="d-flex px-3" width="100%" :no-deco="false">
             <v-list-item-content class="mb-2">
                 <v-list-item-title class="d-flex justify-start"> {{ task.title }} <v-icon v-if="task.icon" class="ml-2"> {{ task.icon }} </v-icon> </v-list-item-title>
                 <span class="caption d-flex justify-start">{{ task.description }}</span>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import Tarefas from '@/Api/Geral/Tarefas'
 export default {
   name: 'QuestList',
 
@@ -39,6 +40,7 @@ export default {
   },
 
   methods: {
+
     formatarData (date) {
       const dateString = new Date(date).toLocaleDateString('pt-PT')
       return dateString.slice(0, 5)
@@ -52,7 +54,23 @@ export default {
       var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)) 
 
       return diffDays <= 1
-    }
+    },
+
+    getColorById(id) {
+      switch (id) {
+      case 1:
+        return 'red'
+      case 2:
+        return 'blue'
+      case 3:
+        return 'green'
+      case 4:
+        return 'yellow'
+      default:
+        return 'black'
+      }
+    },
+
   }
 }
 </script>

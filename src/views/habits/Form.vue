@@ -228,7 +228,6 @@ export default {
         const params = cloneDeep(this.form)
         params.days = JSON.stringify(params.days)
         params.id_usuario = this.$store.state.usuario.dados.id
-
         await Habitos.salvar(params)
         this.$emit('newHabit')
         this.show = false

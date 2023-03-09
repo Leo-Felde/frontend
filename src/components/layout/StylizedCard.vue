@@ -46,7 +46,7 @@ export default {
     height: { type: String, default: null },
     width: { type: String, default: null },
     contentClass: { type: String, default: null },
-    color: { type: String, default: null },
+    color: { type: String, default: 'black' },
   },
 
   computed: {
