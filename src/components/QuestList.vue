@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import Tarefas from '@/Api/Geral/Tarefas'
 export default {
   name: 'QuestList',
 

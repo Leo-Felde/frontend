@@ -87,7 +87,7 @@ export default {
     tabs: [
       { icon: 'sword', name: 'Guerreiro' },
       { icon: 'wizards-hat', name: 'Mago' },
-      { icon: 'bow-and-arrow', name: 'Teste' }
+      { icon: 'bow-and-arrow', name: 'Arqueiro' }
     ],
     loadingTasks: true,
     tasks: [],
@@ -120,11 +120,11 @@ export default {
 
     async vincularTarefa(task){
       console.log(task)
-      if (confirm("Vincular tarefa?")==true){
+      if (confirm('Vincular tarefa?')==true){
         const params = {
-        id_usuario: this.$store.state.usuario.dados.id,
-        id_tarefa: task.id,
-        status: false
+          id_usuario: this.$store.state.usuario.dados.id,
+          id_tarefa: task.id,
+          status: false
         }
         const resp = await Tarefas.vincularTarefa(params)
         console.log(resp)
