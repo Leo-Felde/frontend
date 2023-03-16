@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import Usuario from '@/Api/Geral/Usuario'
 export default {
   data: () => ({
     value: [
@@ -43,6 +44,21 @@ export default {
       'Seg', 'Tec', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'
     ]
   }),
+  
+  async mounted () {
+    await this.buscarAtividadeSemanal()
+  },
+
+  methods: {
+    async buscarAtividadeSemanal(){
+      const idUsuario = this.$store.state.usuario.dados.id
+      const resp = await Usuario.buscarAtividadeSemanal(idUsuario)
+      console.log(resp)
+    }
+
+    
+  },
+
 }
 </script>
 

@@ -8,6 +8,10 @@ const methods = {
 
   salvar (params) {
     return api.post(`${prefix}/salvar`, params)
+  },
+
+  buscarAtividadeSemanal (id) {
+    return api.get(`${prefix}/buscarAtividadeSemanal/${id}`)
   }
 }
 

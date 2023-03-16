@@ -36,7 +36,7 @@
 // @ is an alias to /src
 
 import PixelTabs from '@/components/pixelTab.vue'
-
+import Itens from '@/Api/Geral/Itens'
   
 export default {
   name: 'tasksIndex',
@@ -59,11 +59,32 @@ export default {
       top: ['gladiator', 'templar', 'red-armor', 'tuxedo', 'red-jacket'],
       bottom: ['gladiator', 'templar', 'wills']
     },
+    loadingItens: false,
+    itens: [],
   }),
+
+  async mounted () {
+    await this.carregarItens()
+  },
+
   methods: {
+    async carregarItens() {
+      console.log('ronaldo')
+      this.loadingItens = true
+      try {
+        const resp = await Itens.listar()
+        this.itens = resp.data.content
+        console.log(this.itens)
+      } catch (err) {
+        this.$snackbar.showMessage({ content: 'Falha ao carregar Itens', color: 'error' })
+      } finally {
+        this.loadingItens = false
+      }
+    },
     changeTab() {
       // ?
     }
+
   },
 }
 </script>
