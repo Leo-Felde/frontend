@@ -1,6 +1,10 @@
 <template>
-    <v-list v-if="items.length" class="pt-0">
-        <v-list-item
+  <div>
+    <div v-if="loading" class="loading-tasks">
+      <v-skeleton-loader v-for="i in 2" :key="i" type="text" class="mb-2" />
+    </div>
+    <v-list v-else-if="items.length" class="pt-0">
+      <v-list-item
         v-for="task in items"
         :key="task.id"
         class="my-2 px-1"
@@ -24,6 +28,10 @@
         </StylizedCard>
         </v-list-item>
     </v-list>
+    <div v-else>
+      <slot />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -35,7 +43,8 @@ export default {
   }),
 
   props: {
-    items: { type: Array, required: true} 
+    items: { type: Array, required: true},
+    loading: Boolean
   },
 
   methods: {
@@ -87,4 +96,11 @@ export default {
 
 .v-list
   overflow-y: scroll
+
+.loading-tasks
+  :deep(.v-skeleton-loader__text)
+    height: 79px
+    margin-left: 5px
+    margin-right: 5px
+
 </style>

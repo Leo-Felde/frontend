@@ -28,11 +28,12 @@
     <v-divider class="mt-6 mb-10"/>
 
     <StylizedCard black class="px-3 py-2 cardsubtitle"> Missões ativas </StylizedCard>
-    <div v-if="loadingTasks" class="loading-tasks">
-      <v-skeleton-loader v-for="i in 2" :key="i" type="text" class="mb-2" />
-    </div>
 
-    <QuestList v-else :items="tasks" @click="concluirTarefa" />
+    <QuestList :loading="loadingTasks" :items="tasks" @click="concluirTarefa">
+      <div v-if="!tasks.length" class="caption mb-1">
+          nenhuma tarefa ativa
+      </div>
+    </QuestList>
     <HabitForm v-model="showNewHabitDialog" @newHabit="carregarHabitos" :habito="habitoSelecionado" />
 
     <v-dialog v-model="showEditHabitDialog">
@@ -102,8 +103,6 @@ export default {
         id_usuario: this.tarefaSelecionada.id_usuario,
         status: !this.tarefaSelecionada.status
       }
-      console.log('params')
-      console.log(params)
       if(confirm('Deseja concluir a tarefa? ') == true){
         await Tarefas.concluirTarefa(params)
         await this.carregarTarefas()
@@ -212,11 +211,6 @@ export default {
     border-radius: 50%
     margin-right: 10px
 
-.loading-tasks
-  :deep(.v-skeleton-loader__text)
-    height: 79px
-    margin-left: 5px
-    margin-right: 5px
 
 #editarHabitos
   position: absolute

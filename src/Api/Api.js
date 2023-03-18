@@ -12,6 +12,7 @@ const instance = axios.create({
     return status >= 200 && status < 300
   },
   cancelToken: new axios.CancelToken(c => (cancel = c)),
+  ignoreCancel: true
 })
 
 instance.interceptors.request.use(
@@ -36,7 +37,11 @@ instance.interceptors.response.use(
   response => response,
   error => {
     if (axios.isCancel(error)) {
-      console.log('Request canceled')
+      return Promise.resolve({
+        data: null,
+        status: 'canceled',
+        statusText: 'Request canceled'
+      })
     } else {
       return Promise.reject(error)
     }

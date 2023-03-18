@@ -21,7 +21,7 @@
 
       <v-divider class="my-4"/>
       <div class="quests__wrapper">
-        <QuestList :items="currentTabTasks" @click="vincularTarefa"/>
+        <QuestList :loading="loadingTasks" :items="currentTabTasks" @click="vincularTarefa"/>
       </div>
 
       <!-- <v-expansion-panels class="elevation-0 px-2 py-3">
@@ -49,35 +49,27 @@
         <QuestList :items="tasks" />
       </StylizedCard> -->
       
-
+      <ConfirmDialog ref="confirm" />
     </StylizedCard>
   </template>
   
 <script>
 import QuestList from '@/components/QuestList.vue'
 import PixelTabs from '@/components/pixelTab.vue'
-import StylizedButton from '@/components/StylizedButton'
 import Tarefas from '@/Api/Geral/Tarefas'
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
 
 export default {
   name: 'tasksIndex',
 
   components: {
-    // eslint-disable-next-line vue/no-unused-components
     QuestList,
-    // eslint-disable-next-line vue/no-unused-components
     PixelTabs,
-    // eslint-disable-next-line vue/no-unused-components
-    StylizedButton
+    ConfirmDialog
   },
 
   computed: {
     currentTabQuests () {
-      // if (this.tab === 0) {
-      //   const quests = [].concat.apply([], this.tasks.map(task => task.quests))
-      //   console.log(quests)
-      //   return quests
-      // }
       return this.tasks[this.tab].quests
     }
   },
@@ -119,16 +111,20 @@ export default {
     },
 
     async vincularTarefa(task){
-      console.log(task)
-      if (confirm('Vincular tarefa?')==true){
-        const params = {
-          id_usuario: this.$store.state.usuario.dados.id,
-          id_tarefa: task.id,
-          status: false
-        }
-        const resp = await Tarefas.vincularTarefa(params)
-        console.log(resp)
+
+      if (!await this.$refs.confirm.open(
+        'Ativar Tarefa',
+        'Deseja ativar essa tarefa?'
+      )) return
+
+      const params = {
+        id_usuario: this.$store.state.usuario.dados.id,
+        id_tarefa: task.id,
+        status: false
       }
+      const resp = await Tarefas.vincularTarefa(params)
+      console.log(resp)
+      
     },
 
     filterTasks() {

@@ -4,12 +4,10 @@
     :max-width="maxWidth"
     @keydown.esc="cancel"
   >
-    <v-card>
-      <v-toolbar dark :color="options.color" dense flat>
-        <v-toolbar-title class="text-body-2 font-weight-bold grey--text">
+    <StylizedCard brown no-borders>
+      <StylizedCard black class="py-2">
           {{ title }}
-        </v-toolbar-title>
-      </v-toolbar>
+      </StylizedCard>
       <v-card-text
         v-show="!!message"
         class="pa-4 black--text"
@@ -20,32 +18,32 @@
         <v-spacer></v-spacer>
         <v-btn
           v-if="!options.noconfirm"
-          color="grey"
           text
-          class="body-2 font-weight-bold"
+          class="body-2 font-weight-bold mr-2"
           @click.native="cancel"
-          >Cancel</v-btn
+          >Cancelar</v-btn
         >
-        <v-btn
-          color="primary"
+        <StylizedButton
+          color="blue"
           class="body-2 font-weight-bold"
           outlined
           @click.native="agree"
-          >OK</v-btn
+          >Confirmar</StylizedButton
         >
       </v-card-actions>
-    </v-card>
+    </StylizedCard>
   </v-dialog>
 </template>
 
 <script>
+import StylizedButton from './StylizedButton.vue'
+
 export default {
   props: {
     persistent: { type: Boolean, default: true },
     maxWidth: { type: String, default: '280' },
   },
-
-  data () {
+  data() {
     return {
       dialog: false,
       title: null,
@@ -56,9 +54,8 @@ export default {
       }
     }
   },
-
   methods: {
-    open (title, message, options) {
+    open(title, message, options) {
       this.dialog = true
       this.title = title
       this.message = message
@@ -68,16 +65,15 @@ export default {
         this.reject = reject
       })
     },
-
-    agree () {
+    agree() {
       this.resolve(true)
       this.dialog = false
     },
-
-    cancel () {
+    cancel() {
       this.resolve(false)
       this.dialog = false
     }
-  }
+  },
+  components: { StylizedButton }
 }
 </script>

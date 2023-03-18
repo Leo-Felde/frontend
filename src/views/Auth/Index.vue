@@ -6,26 +6,26 @@
     
     <form>
       <TextField
-        v-model="email"
-        ref="email"
+        v-model="login"
+        ref="login"
         label="E-mail"
         dense
         required
-        :error-messages="emailErrors"
+        :error-messages="loginErrors"
         :hide-details="false"
-        @blur="$v.email.$touch()"
+        @blur="$v.senha.$touch()"
       />
 
       <TextField
-        v-model="password"
-        ref="password"
+        v-model="senha"
+        ref="senha"
         :type="showPassword ? 'text' : 'password'"
         dense
         required
         label="senha"
         :hide-details="false"
-        :error-messages="passwordErrors"
-        @blur="$v.password.$touch()"
+        :error-messages="senhaErrors"
+        @blur="$v.senha.$touch()"
       >
         <template v-slot:append>
           <v-btn icon @click="showPassword = !showPassword"> <v-icon> {{showPassword ? 'mdi-eye-off' : 'mdi-eye'}} </v-icon></v-btn>
@@ -58,37 +58,37 @@ export default {
   },
 
   data: () => ({
-    email : null,
-    password: null,
+    login : null,
+    senha: null,
     loading: false,
     showPassword: false,
     errMessage: undefined
   }),
 
   validations: {
-    email: {
+    login: {
       required,
       email
     },
-    password: {
+    senha: {
       required
     }
   },
 
   computed: {
-    emailErrors () {
+    loginErrors () {
       const errors = []
-      if (!this.$v.email.$dirty) return errors
-      !this.$v.email.email && errors.push('E-mail inválido.')
-      !this.$v.email.required && errors.push('Campo obrigatório.')
+      if (!this.$v.login.$dirty) return errors
+      !this.$v.login.email && errors.push('E-mail inválido.')
+      !this.$v.login.required && errors.push('Campo obrigatório.')
       return errors
     },
 
-    passwordErrors () {
+    senhaErrors () {
       const errors = []
       if (this.errMessage) return this.errMessage
-      if (!this.$v.password.$dirty) return errors
-      !this.$v.password.required && errors.push('Campo obrigatório.')
+      if (!this.$v.senha.$dirty) return errors
+      !this.$v.senha.required && errors.push('Campo obrigatório.')
       return errors
     }
   },
@@ -109,8 +109,8 @@ export default {
       this.loading = true
       try {
         const params = {
-          email: this.email,
-          senha: encode(this.password)
+          email: this.login,
+          senha: encode(this.senha)
         }
         const resp = await Auth.login(params)
 

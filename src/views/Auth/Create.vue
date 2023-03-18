@@ -83,6 +83,7 @@ export default {
   },
 
   data: () => ({
+    errMessage: false,
     loading: false,
     name: null,
     email: null,
@@ -94,7 +95,7 @@ export default {
   validations: {
     name: {
       required,
-      minLength: minLength(5)
+      minLength: minLength(3)
     },
     email: {
       required,
@@ -123,7 +124,7 @@ export default {
     nameErrors () {
       const errors = []
       if (!this.$v.name.$dirty) return errors
-      !this.$v.name.minLength && errors.push('Deve ter no mínimo 6 characteres')
+      !this.$v.name.minLength && errors.push('Deve ter no mínimo 3 characteres')
       !this.$v.name.required && errors.push('Campo obrigatório.')
       return errors
     },
@@ -131,6 +132,7 @@ export default {
     emailErrors () {
       const errors = []
       if (!this.$v.email.$dirty) return errors
+      this.errMessage.length && errors.push(this.errMessage[0])
       !this.$v.email.email && errors.push('Deve ser um e-mail válido.')
       !this.$v.email.required && errors.push('Campo obrigatório.')
       return errors
@@ -176,7 +178,12 @@ export default {
           senha: encode(this.password)
         }
 
-        await Auth.cadastro(params)
+        const resp = await Auth.cadastro(params)
+        if (resp.data.statusCode !== 200) {
+          this.errMessage = Object.values(resp.data.content)
+          return
+        }
+        this.$snackbar.showMessage({ content: 'Cadastro realizado com sucesso', color: 'green' })
         setTimeout(() => {
           this.$router.push('/auth')
         }, 1000)
@@ -194,6 +201,7 @@ export default {
           'Tem certeza que deseja cancelar o cadastro?'
         )) return
       }
+      
       this.$router.push('/auth')
     }
   },

@@ -33,15 +33,6 @@ export default {
     navDrawer: false
   }),
 
-  mounted () {
-    if (!this.$vuetify.breakpoint.smAndDown) {
-      this.$refs.confirm.open(
-        'Alerta de exibição',
-        'Esse aplicativo é melhor visualizado em dispositivos mobile'
-      )
-    }
-  },
-
   computed: {
     loginRoute () {
       return this.$route.path.includes('auth')
