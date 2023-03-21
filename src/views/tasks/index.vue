@@ -100,7 +100,7 @@ export default {
     async carregarTarefas() {
       this.loadingTasks = true
       try {
-        const resp = await Tarefas.listar()
+        const resp = await Tarefas.listar(this.$store.state.usuario.dados.id)
         this.tasks = resp.data.content
         this.filterTasks()
       } catch (err) {
