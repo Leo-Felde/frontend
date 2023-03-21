@@ -7,7 +7,7 @@
       <v-icon> mdi-account-circle </v-icon>
     </v-btn>
     <v-btn value="stats" to="/stats">
-      <v-icon> mdi-calendar-clock </v-icon>
+      <v-icon> mdi-chart-line </v-icon>
     </v-btn>
     <v-btn value="home" to="/home" id="main-nav">
       <v-icon large> mdi-view-dashboard-outline </v-icon>

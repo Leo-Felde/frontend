@@ -1,10 +1,15 @@
 <template>
     <v-card
     class="text-center"
-    color="green"
+    color="#BDAA97"
     dark
     max-width="600"
   >
+    <v-card-text>
+      <div class="text-h4">
+        Atividade semanal
+      </div>
+    </v-card-text>
     <v-card-text>
       <v-sheet color="rgba(0, 0, 0, .12)">
         <v-sparkline
@@ -19,11 +24,6 @@
       </v-sheet>
     </v-card-text>
 
-    <v-card-text>
-      <div class="text-h4 font-weight-thin">
-        Atividade semanal
-      </div>
-    </v-card-text>
   </v-card>
 </template>
 
