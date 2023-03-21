@@ -30,9 +30,9 @@
     <!-- INVENTARIO -->
     <PixelTabs v-model="inventoryTab" :items="inventoryTabs" content-class="d-flex justify-space-around"/>
     <v-row cols="12" class="ma-0 mb-3">
-      <v-col cols="4" v-for="i in 12" :key="`inv-${i}`" @click="currentTabItems[i - 1] ? selectItem(inventoryTabs[inventoryTab], currentTabItems[i - 1]) : null" :class="{'pointer': currentTabItems[i - 1]}">
+      <v-col cols="4" v-for="i in 12" :key="`inv-${i}`" @click="currentTabItems[i - 1] ? selectItem(inventoryTabs[inventoryTab].value, currentTabItems[i - 1]) : null" :class="{'pointer': currentTabItems[i - 1]}">
         <StylizedCard light content-class="d-flex" height="50px">
-          <v-img v-if="currentTabItems[i - 1]" :src="require(`@/assets/character/${inventoryTabs[inventoryTab]}/icon/${currentTabItems[i - 1]}.png`)" height="30px" contain class="self-align-center" />
+          <v-img v-if="currentTabItems[i - 1]" :src="require(`@/assets/character/${inventoryTabs[inventoryTab].value}/icon/${currentTabItems[i - 1]}.png`)" height="30px" contain class="self-align-center" />
         </StylizedCard>
       </v-col>
     </v-row>
@@ -84,7 +84,7 @@ export default {
 
   computed: {
     currentTabItems () {
-      return this.ownedItems[this.inventoryTabs[this.inventoryTab]] || []
+      return this.ownedItems[this.inventoryTabs[this.inventoryTab].value] || []
     },
 
     usuario () {
@@ -113,7 +113,7 @@ export default {
     currentPicker: 0,
     colorPickers: ['body', 'hair', 'eye'],
     inventoryTab: 0,
-    inventoryTabs: ['head', 'top', 'bottom']
+    inventoryTabs: [{ title: 'cabeça', value: 'head' },{ title: 'Corpo', value: 'top' },{ title: 'pernas', value: 'bottom' }],
   }),
 
   methods: {

@@ -93,6 +93,7 @@ export default {
   async mounted () {
     await this.carregarHabitos()
     await this.carregarTarefas()
+    this.mostrarNotificacoes()
   },
 
   methods: {
@@ -158,7 +159,46 @@ export default {
       this.showNewHabitDialog = true
     },
 
+    mostrarNotificacoes () {
+      let monstrarNotificacao = false
+      const dataAtual = new Date()
+      const diaHoje = dataAtual.getDay()
+      const horaAgora = dataAtual.getHours()
 
+      this.habits.forEach(habit => {
+        if (!habit.days.includes(diaHoje)) {
+          return
+        }
+
+        switch (habit.period) {
+        case 3: // qqr
+          monstrarNotificacao = true
+          break
+        case 2: // noite
+          monstrarNotificacao = horaAgora <= 0 && horaAgora > 18
+          break
+        case 1: // dia 
+          monstrarNotificacao = horaAgora < 18 && horaAgora >= 12
+          break
+        case 0: // manhã
+          monstrarNotificacao = horaAgora < 12 && horaAgora > 6
+          break
+        }
+      })
+
+      if (monstrarNotificacao) {
+        Notification.requestPermission().then(perm => {
+          if (perm === 'granted') {
+            new Notification('MyPath', {
+              body: 'Não esqueça de seus hábitos',
+              data: {},
+              icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAGFBMVEX///9sPEoUFSmzdUvqt4Dk6NowKzvgIBgKNGdDAAAAAXRSTlMAQObYZgAAAHhJREFUeNq10dEKwkAMRFFvE+P//7E7liDz1G3Eeb2HlKWPfwyO4xcAEZkiMwC59lyDCQDFE2TCXQAKDTS4A6BDRAM99xr4+Qaer0HVN7/WwPIlqIq1/CziBJlVanvAPwGe94A/0/Mu0Gf8N+8DJ31+BkR0fgjmewOtmwbp/d5eZgAAAABJRU5ErkJggg==',
+              tag: 'habito'
+            })
+          }
+        })
+      }
+    }
   }
 }
 </script>
