@@ -11,7 +11,7 @@
 
       <Snackbar />
       <ConfirmDialog ref="confirm" />
-      <NavigationProvider v-show="!loginRoute" v-model="navDrawer" />
+      <NavigationProvider v-show="!loginRoute" />
 </v-app>
 </template>
 
@@ -29,10 +29,6 @@ export default {
     Snackbar
   },
 
-  data: () => ({
-    navDrawer: false
-  }),
-
   computed: {
     loginRoute () {
       return this.$route.path.includes('auth')
@@ -40,12 +36,6 @@ export default {
 
     mobile () {
       return this.$vuetify.breakpoint.smAndDown
-    }
-  },
-
-  methods: {
-    toggleNavDrawer () {
-      this.navDrawer = !this.navDrawer
     }
   }
 }
