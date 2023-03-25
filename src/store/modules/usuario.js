@@ -9,4 +9,5 @@ export default {
       state.dados = payload
     }
   }
+  
 }

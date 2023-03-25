@@ -48,7 +48,7 @@
         <div class="d-flex"><v-btn fab x-small :color="eyeColor" elevation="0" @click="colorPick('eye')"/> <span class="caption colortitle">Olhos</span></div>
       </div>
 
-    <v-dialog v-model="showPicker">
+    <v-dialog v-model="showPicker" max-width="300px">
       <v-color-picker v-if="currentPicker === 0" v-model="bodyColor" hide-inputs mode="hexa" @update:color="renderCanvas('body')" class="mx-auto" />
       <v-color-picker v-else-if="currentPicker === 1" v-model="hairColor" hide-inputs mode="hexa" @update:color="renderCanvas('hair')" class="mx-auto" />
       <v-color-picker v-else-if="currentPicker === 2" v-model="eyeColor"  hide-inputs mode="hexa" @update:color="renderCanvas('eye')" class="mx-auto" />
@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import Usuario from '@/Api/Geral/Usuario'
 import PixelTabs from '@/components/pixelTab.vue'
 
 export default {
@@ -116,12 +117,38 @@ export default {
     inventoryTabs: [{ title: 'cabeça', value: 'head' },{ title: 'Corpo', value: 'top' },{ title: 'pernas', value: 'bottom' }],
   }),
 
+  watch: {
+    showPicker (value) {
+      if (!value) {
+        this.salvarPersonagem()
+      }
+    }
+  },
+
   methods: {
     carregarPersonagem () {
       const keys = Object.keys(this.personagem)
       keys.forEach(key => {
         this[key] = this.personagem[key]
       })
+    },
+
+    async salvarPersonagem () {
+      const personagem = {
+        bodyColor: this.bodyColor,
+        eyeColor: this.eyeColor,
+        hairColor: this.hairColor,
+        charHair: this.charHair,
+        charHead: this.charHead,
+        charTop: this.charTop,
+        charBottom: this.charBottom,
+      }
+      const options = { personagem: JSON.stringify(personagem), id:this.usuario.id }
+      try {
+        await Usuario.salvar(options)
+      } catch (error) {
+        // n faz nada
+      }
     },
 
     selectHair (number) {
@@ -151,6 +178,7 @@ export default {
       setTimeout(() => {
         this.renderCanvas('hair')
       }, 100)
+      this.salvarPersonagem()
     },
 
     colorPick (which) {
@@ -162,6 +190,7 @@ export default {
       const capitalizedBP = bPart.charAt(0).toUpperCase() + bPart.slice(1)
       if (this[`char${capitalizedBP}`] === item) this[`char${capitalizedBP}`] = null
       else this[`char${capitalizedBP}`] = item
+      this.salvarPersonagem()
     },
 
     renderCanvas (name) {

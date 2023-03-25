@@ -62,6 +62,8 @@
         </v-list>
       </StylizedCard>
     </v-dialog>
+
+    <ConfirmDialog ref="confirm" />
   </StylizedCard>
 </template>
 
@@ -71,6 +73,7 @@ import Habitos from '@/Api/Geral/Habitos'
 
 import HabitForm from './habits/Form.vue'
 import QuestList from '@/components/QuestList.vue'
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
 
 export default {
   name: 'HomeView',
@@ -87,7 +90,8 @@ export default {
 
   components: {
     QuestList,
-    HabitForm
+    HabitForm,
+    ConfirmDialog
   },
 
   async mounted () {
@@ -98,16 +102,20 @@ export default {
 
   methods: {
     async concluirTarefa (tarefa) {
+      if (!await this.$refs.confirm.open(
+        'Concluir tarefa',
+        'Deseja concluir essa tarefa?'
+      )) return
+
       this.tarefaSelecionada = tarefa
       const params = { 
         id_tarefa: this.tarefaSelecionada.id_tarefa,
         id_usuario: this.tarefaSelecionada.id_usuario,
         status: !this.tarefaSelecionada.status
       }
-      if(confirm('Deseja concluir a tarefa? ') == true){
-        await Tarefas.concluirTarefa(params)
-        await this.carregarTarefas()
-      }
+      await Tarefas.concluirTarefa(params)
+      await this.carregarTarefas()
+
     },
 
     async longPress (item) {

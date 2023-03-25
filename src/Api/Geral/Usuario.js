@@ -10,6 +10,10 @@ const methods = {
     return api.post(`${prefix}/salvar`, params)
   },
 
+  comprarItem (params) {
+    return api.post(`${prefix}/comprarItem`, params)
+  },
+
   buscarAtividadeSemanal (id) {
     return api.get(`${prefix}/buscarAtividadeSemanal/${id}`)
   }

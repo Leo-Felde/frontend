@@ -14,13 +14,16 @@
       <v-sheet color="rgba(0, 0, 0, .12)">
         <v-sparkline
           :value="value"
-          :labels="dias"
+          :labels="label"
           color="rgba(255, 255, 255, .7)"
           height="100"
           padding="24"
           stroke-linecap="round"
           smooth
         />
+        <span v-if="semAtividade" class="no-activity-text caption">
+          Nenhuma atividade nos últimos 7 dias
+        </span>
       </v-sheet>
     </v-card-text>
 
@@ -31,19 +34,21 @@
 import Usuario from '@/Api/Geral/Usuario'
 export default {
   data: () => ({
-    value: [
-      0,
-      2,
-      1,
-      2,
-      1,
-      0,
-      1,
+    value: [],
+    label: [
+      'Dom', 'Seg', 'Terc', 'Qua', 'Qui', 'Sex', 'Sab'
     ],
     dias: [
-      'Seg', 'Tec', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'
+      'Dom','Seg', 'Tec', 'Qua', 'Qui', 'Sex', 'Sab'
     ]
   }),
+
+  computed: {
+    semAtividade () {
+      if (!this.value.length > 0) return true
+      return this.value.every(element => element === 0)
+    },
+  },
   
   async mounted () {
     await this.buscarAtividadeSemanal()
@@ -53,7 +58,11 @@ export default {
     async buscarAtividadeSemanal(){
       const idUsuario = this.$store.state.usuario.dados.id
       const resp = await Usuario.buscarAtividadeSemanal(idUsuario)
-      console.log(resp)
+      let atividade = resp.data.content.map(obj => obj.count)
+      this.value = atividade
+
+      const today = new Date().getDay()
+      this.label = this.dias.slice(today + 1).concat(this.dias.slice(0, today + 1))
     }
 
     
@@ -62,6 +71,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="sass" scoped>
+.no-activity-text
+  position: absolute
+  left: 20px
+  top: 100px
 </style>

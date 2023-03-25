@@ -6,7 +6,10 @@
     :required="required"
     :label="label"
     :class="`stylized-tf ${contentClass}`"
+    :prepend-icon="prependIcon"
+    :prepend-inner-icon="prependInnerIcon"
     :append-icon="appendIcon"
+    :append-outer-icon="appendOuterIcon"
     :placeholder="placeHolder"
     :hideDetails="hideDetails"
     :error-messages="errorMessages"
@@ -36,7 +39,10 @@ export default {
     errorMessages: { type: [String, Array], default: () => [] },
     type: { type: String, default: 'text' },
     contentClass: { type: String, default: '' },
+    prependIcon: { type: String, default: undefined },
+    prependInnerIcon: { type: String, default: undefined },
     appendIcon: { type: String, default: undefined },
+    appendOuterIcon: { type: String, default: undefined },
     placeHolder: { type: String, default: undefined },
     counter: { type: String, default: undefined },
     label: { type: String, default: undefined },

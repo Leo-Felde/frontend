@@ -13,7 +13,7 @@
         <span class="ma-auto subtitle-2 d-flex-column">
           {{  tabs[tab].name }}
           <span class="caption">
-            descrição teste
+            {{  tabs[tab].descrition }}
           </span>
         </span>
       </StylizedCard>
@@ -21,7 +21,7 @@
 
       <v-divider class="my-4"/>
       <div class="quests__wrapper">
-        <QuestList :loading="loadingTasks" :items="currentTabTasks" @click="vincularTarefa"/>
+        <QuestList :loading="loadingTasks" :items="currentTabTasks" @click="vincularTarefa" listaPrincipal/>
       </div>
 
       <!-- <v-expansion-panels class="elevation-0 px-2 py-3">
@@ -77,9 +77,9 @@ export default {
   data: () => ({
     tab: 0,
     tabs: [
-      { icon: 'sword', name: 'Guerreiro' },
-      { icon: 'wizards-hat', name: 'Mago' },
-      { icon: 'bow-and-arrow', name: 'Arqueiro' }
+      { icon: 'sword', name: 'Guerreiro', descrition: 'Tarefas relacionadas a saúde física' },
+      { icon: 'wizards-hat', name: 'Mago', descrition: 'Tarefas relacionadas a saúde mental' },
+      { icon: 'bow-and-arrow', name: 'Druída', descrition: 'Tarefas relacionadas ao contato com a natureza' }
     ],
     loadingTasks: true,
     tasks: [],

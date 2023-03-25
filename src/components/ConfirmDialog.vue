@@ -14,23 +14,26 @@
       >
       {{ message }}
     </v-card-text>
-      <v-card-actions class="pt-3">
-        <v-spacer></v-spacer>
-        <v-btn
-          v-if="!options.noconfirm"
-          text
-          class="body-2 font-weight-bold mr-2"
-          @click.native="cancel"
-          >Cancelar</v-btn
-        >
-        <StylizedButton
-          color="blue"
-          class="body-2 font-weight-bold"
-          outlined
-          @click.native="agree"
-          >Confirmar</StylizedButton
-        >
-      </v-card-actions>
+
+    <slot />
+    
+    <v-card-actions class="pt-3">
+      <v-spacer></v-spacer>
+      <v-btn
+        v-if="!options.noconfirm"
+        text
+        class="body-2 font-weight-bold mr-2"
+        @click.native="cancel"
+        >Cancelar</v-btn
+      >
+      <StylizedButton
+        color="blue"
+        class="body-2 font-weight-bold"
+        outlined
+        @click.native="agree"
+        >Confirmar</StylizedButton
+      >
+    </v-card-actions>
     </StylizedCard>
   </v-dialog>
 </template>
