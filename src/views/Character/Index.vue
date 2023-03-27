@@ -1,5 +1,5 @@
 <template>
-  <StylizedCard brown height="90%" >
+  <StylizedCard brown height="90%" width="500px">
     <StylizedCard black class="cardtitle px-3 py-2"> Personagem </StylizedCard>
     <div v-if="loading" class="d-flex-column mt-10">
       <v-progress-circular color="red darken-2" size="80" width="5" class="mx-auto" indeterminate />

@@ -107,9 +107,9 @@ export default {
     charTop: null,
     charBottom: null,
     ownedItems: {
-      head: [ 'cultist', 'blue-armor', 'red-armor', 'wills'],
-      top: ['cultist', 'blue-armor', 'red-armor', 'wills', 'shirt'],
-      bottom: ['blue-armor', 'red-armor', 'wills', 'black-pants']
+      head: [],
+      top: [],
+      bottom: []
     },
     currentPicker: 0,
     colorPickers: ['body', 'hair', 'eye'],
@@ -139,8 +139,18 @@ export default {
     
     async carregarInventario () {
       const idUsuario = this.$store.state.usuario.dados.id
-      const resp = await Usuario.listarInventario(idUsuario)
-      this.itens = resp.data.content.items
+      try {
+        const resp = await Usuario.listarInventario(idUsuario)
+        console.log(resp)
+        if (!resp.data.content.length) return
+        resp.data.content.forEach(item => {
+          this.ownedItems[item.categoria].push(item.referencia)
+        })
+
+        // this.itens = resp.data.content.items
+      } catch (err) {
+        this.$snackbar.showMessage({ content: 'Falha ao carregar inventário', color: 'error' })
+      }
     },
 
     async salvarPersonagem () {
@@ -172,14 +182,14 @@ export default {
 
     changeHair (action) {
       if (action === 'next') {
-        if (this.charHair === 22) {
+        if (this.charHair === 21) {
           this.charHair = 1
         } else {
           this.charHair += 1
         }
       } else {
         if (parseInt(this.charHair) === 1) {
-          this.charHair = 22
+          this.charHair = 21
         } else {
           this.charHair -= 1
         }
@@ -251,12 +261,12 @@ export default {
 #color-btns
   position: absolute
   top: 80px
-  left: 150px
+  left: 180px
     
 #hair
   position: absolute
   top: 80px
-  left: 0px
+  left: -5px
   z-index: 4
   &-next
     @extend #hair
@@ -265,19 +275,13 @@ export default {
     @extend #hair
     left: 8px
 
-#inventory-btn
-  position: absolute
-  top: 130px
-  left: 130px
-
 #char
   position: absolute
   z-index: 2
   top: 0px
-  left: 22px
+  left: -3px
   &-eye-whites
     @extend #char
-    left: 21px
   &-head // capacete ou chapeu
     @extend #char
     z-index: 4
@@ -290,7 +294,7 @@ export default {
 
 #canvas
   position: absolute
-  left: 25px
+  left: 0px
   top: 0px
   z-index: 2
   width: 100px
@@ -302,6 +306,8 @@ export default {
     @extend #canvas
   &-eye
     @extend #canvas
+    &-whites
+      @extend #canvas
 
 #character_wrapper
   width: 180px
