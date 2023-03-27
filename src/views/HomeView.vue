@@ -138,7 +138,7 @@ export default {
     async carregarHabitos () {
       this.loadingHabits = true
       try {
-        const resp = await Habitos.listar()
+        const resp = await Habitos.listar(this.$store.state.usuario.dados.id)
         this.habits = resp.data.content
       } catch (err) {
         this.$snackbar.showMessage({ content: 'Falha ao carregar habitos', color: 'error' })

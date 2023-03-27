@@ -29,8 +29,8 @@
       </v-col>
     </v-row>
     <v-row v-else cols="12" class="ma-0 mb-3">
-      <v-col>
-        <StylizedCard light content-class="d-flex justify-center" height="50px" v-if="usuarioAdmin">
+      <v-col v-if="usuarioAdmin">
+        <StylizedCard light content-class="d-flex justify-center" height="50px">
          <v-icon large color="primary" @click="newItemDialog = true"> mdi-plus-circle </v-icon>
         </StylizedCard>
       </v-col>
@@ -233,13 +233,22 @@ export default {
     },
 
     async adicionarItem () {
-      console.log(this.form)
-      const resp = await Itens.salvar(this.form)
-      console.log(resp)
+      this.loadingItem = true
+      try {
+        await Itens.salvar(this.form)
+        this.$snackbar.showMessage({ content: 'Item cadastrado com sucesso', color: 'green' })
+        this.cancelarNovoitem()
+        this.carregarItens()
+      } catch (err) {
+        this.$snackbar.showMessage({ content: 'Falha ao cadastrar Item', color: 'error' })
+      } finally {
+        this.loadingItem = false
+      }
     },
 
     cancelarNovoitem() {
       this.newItemDialog = false
+      this.form = {}
     }
   },
 }

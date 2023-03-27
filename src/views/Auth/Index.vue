@@ -109,7 +109,7 @@ export default {
       this.loading = true
       try {
         const params = {
-          email: this.login,
+          email: this.login.toLowerCase(),
           senha: encode(this.senha)
         }
         const resp = await Auth.login(params)
