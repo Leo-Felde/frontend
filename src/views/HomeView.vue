@@ -168,6 +168,9 @@ export default {
     },
 
     mostrarNotificacoes () {
+      const mostrouNotificacao = this.$store.state.usuario.mostrouNotificacao
+      if (mostrouNotificacao) return
+
       let monstrarNotificacao = false
       const dataAtual = new Date()
       const diaHoje = dataAtual.getDay()
@@ -206,6 +209,8 @@ export default {
           }
         })
       }
+
+      this.$store.commit('usuario/setNotificacao', true)
     }
   }
 }

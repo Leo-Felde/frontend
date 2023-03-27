@@ -2,8 +2,8 @@ import api from '../Api'
 
 const prefix = 'item'
 const methods = {
-  listar (params) {
-    return api.get(`${prefix}/listar`, params)
+  listar (id) {
+    return api.get(`${prefix}/listar/${id}`)
   },
 
   salvar (params) {

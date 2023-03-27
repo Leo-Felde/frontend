@@ -162,14 +162,14 @@ export default {
 
     changeHair (action) {
       if (action === 'next') {
-        if (this.charHair === 21) {
+        if (this.charHair === 22) {
           this.charHair = 1
         } else {
           this.charHair += 1
         }
       } else {
         if (parseInt(this.charHair) === 1) {
-          this.charHair = 21
+          this.charHair = 22
         } else {
           this.charHair -= 1
         }

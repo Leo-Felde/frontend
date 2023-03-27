@@ -20,18 +20,26 @@
     <v-card-actions class="pt-3">
       <v-spacer></v-spacer>
       <v-btn
-        v-if="!options.noconfirm"
+        v-if="!options.noconfirm && !okEntendi"
         text
         class="body-2 font-weight-bold mr-2"
         @click.native="cancel"
         >Cancelar</v-btn
       >
       <StylizedButton
+        v-if="!okEntendi"
         color="blue"
         class="body-2 font-weight-bold"
         outlined
         @click.native="agree"
         >Confirmar</StylizedButton
+      >
+      <v-btn
+        v-else
+        text
+        class="body-2 font-weight-bold mr-2"
+        @click.native="cancel"
+        >Ok, entendi</v-btn
       >
     </v-card-actions>
     </StylizedCard>
@@ -45,6 +53,7 @@ export default {
   props: {
     persistent: { type: Boolean, default: true },
     maxWidth: { type: String, default: '280' },
+    okEntendi: Boolean
   },
   data() {
     return {
