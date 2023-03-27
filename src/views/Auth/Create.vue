@@ -179,7 +179,11 @@ export default {
         }
 
         const resp = await Auth.cadastro(params)
-        if (resp.data.statusCode !== 200) {
+        console.log(resp)
+        console.log(resp.data.statusCode)
+        console.log(resp.data.statusCode !== 201)
+        this.errMessage = null
+        if (resp.data.statusCode !== 200 && resp.data.statusCode !== 201) {
           this.errMessage = Object.values(resp.data.content)
           return
         }

@@ -16,7 +16,6 @@
     :rules="rules"
     :counter="counter"
     :type="type"
-    v-mask="mask"
   >
     <template v-slot:append>
       <slot name="append" />
@@ -48,7 +47,6 @@ export default {
     counter: { type: String, default: undefined },
     label: { type: String, default: undefined },
     value: { type: String, default: null },
-    mask:  { type: String, default: undefined },
   },
 
   data: () => ({
