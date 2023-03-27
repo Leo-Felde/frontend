@@ -125,12 +125,22 @@ export default {
     }
   },
 
+  async mounted() {
+    await this.carregarInventario()
+  },
+
   methods: {
     carregarPersonagem () {
       const keys = Object.keys(this.personagem)
       keys.forEach(key => {
         this[key] = this.personagem[key]
       })
+    },
+    
+    async carregarInventario () {
+      const idUsuario = this.$store.state.usuario.dados.id
+      const resp = await Usuario.listarInventario(idUsuario)
+      this.itens = resp.data.content.items
     },
 
     async salvarPersonagem () {

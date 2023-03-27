@@ -16,6 +16,10 @@ const methods = {
 
   buscarAtividadeSemanal (id) {
     return api.get(`${prefix}/buscarAtividadeSemanal/${id}`)
+  },
+
+  listarInventario (id) {
+    return api.get(`${prefix}/listarInventario/${id}`)
   }
 }
 
