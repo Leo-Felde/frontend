@@ -55,9 +55,9 @@
           <v-row no-gutters class="mx-8 mt-4">
             <v-col cols="12" md="12">
               <TextField
-                v-model="form.title"
+                v-model="form.nome"
                 ref="title"
-                label="título"
+                label="Nome"
               />
             </v-col>
 
@@ -72,7 +72,14 @@
             <v-col cols="12" md="12" class="mt-4">
               <TextField
               v-model="form.referencia"
-                label="referencia"
+                label="Referência"
+              />
+            </v-col>
+
+            <v-col cols="12" md="12" class="mt-4">
+              <TextField
+              v-model="form.categoria"
+                label="Categoria"
               />
             </v-col>
           </v-row>
@@ -207,8 +214,10 @@ export default {
       }
     },
 
-    adicionarItem () {
-      //
+    async adicionarItem () {
+      console.log(this.form)
+      const resp = await Itens.salvar(this.form)
+      console.log(resp)
     },
 
     cancelarNovoitem() {

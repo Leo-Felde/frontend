@@ -124,6 +124,7 @@
 <script>
 import { required, minLength } from 'vuelidate/lib/validators'
 import StylizedButton from './StylizedButton.vue'
+import Tarefas from '@/Api/Geral/Tarefas'
 
 export default {
   name: 'QuestList',
@@ -222,9 +223,11 @@ export default {
     excluirTarefa() {
       //
     },
-    adicionarTarefa() {
-      this.$v.$touch()
-      if (this.$v.$anyError) return
+    async adicionarTarefa() {
+      console.log(this.form)
+      this.form['id_category'] = 1
+      const resp = await Tarefas.salvar(this.form)
+      console.log(resp)
     },
     cancelarNovaTarefa() {
       // this.$v.$reset()
