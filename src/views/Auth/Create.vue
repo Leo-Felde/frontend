@@ -174,7 +174,7 @@ export default {
       try {
         const params = {
           nome: this.name,
-          email: this.email,
+          email: this.email.toLowerCase(),
           senha: encode(this.password)
         }
 

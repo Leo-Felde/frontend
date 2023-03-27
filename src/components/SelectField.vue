@@ -1,11 +1,14 @@
 <template>
-  <v-text-field
+  <v-select
     v-model="textValue"
     solo
+    :items="items"
     :dense="dense"
     :required="required"
     :label="label"
     :class="`stylized-tf ${contentClass}`"
+    :item-text="itemText"
+    :item-value="itemValue"
     :prepend-icon="prependIcon"
     :prepend-inner-icon="prependInnerIcon"
     :append-icon="appendIcon"
@@ -16,16 +19,8 @@
     :rules="rules"
     :counter="counter"
     :type="type"
-    v-mask="mask"
-  >
-    <template v-slot:append>
-      <slot name="append" />
-    </template>
-
-    <template v-slot:prepend-inner>
-      <div v-for="i in 2" :key="i" :id="`tf-deco-${i}`"/>
-    </template>
-  </v-text-field>
+    :v-mask="mask"
+  />
 </template>
 
 <script>
@@ -38,6 +33,7 @@ export default {
     required: Boolean,
     rules: { type: Array, default: () => [] },
     errorMessages: { type: [String, Array], default: () => [] },
+    items: { type: Array, default: () => [] },
     type: { type: String, default: 'text' },
     contentClass: { type: String, default: '' },
     prependIcon: { type: String, default: undefined },
@@ -49,6 +45,8 @@ export default {
     label: { type: String, default: undefined },
     value: { type: String, default: null },
     mask:  { type: String, default: undefined },
+    itemValue:  { type: String, default: undefined },
+    itemText:  { type: String, default: undefined },
   },
 
   data: () => ({
@@ -96,4 +94,11 @@ export default {
   &:deep(.v-text-field__details)
     padding-top: 4px !important
     margin-bottom: 0px !important
+
+
+.v-select-list
+  outline: 3px solid white !important
+  box-shadow: 0px 0px 0px 3px #353540 inset, 0px 0px 0px 6px #937461  inset !important
+  background-color: #9d8872 !important
+  padding: 4px 4px 4px 4px
 </style>

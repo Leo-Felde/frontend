@@ -52,14 +52,23 @@
 
           <v-row no-gutters class="mx-8 mt-4">
             <v-col cols="12" md="12">
+              <SelectField
+                v-model="form.category"
+                :items="categorias"
+                ref="title"
+                label="categoria"
+                required
+                :hide-details="false"
+              />
+            </v-col>
+
+            <v-col cols="12" md="12">
               <TextField
                 v-model="form.title"
                 ref="title"
                 label="título"
                 required
-                :error-messages="titleErrors"
                 :hide-details="false"
-                @blur="$v.title.$touch()"
               />
             </v-col>
 
@@ -69,9 +78,7 @@
                 ref="description"
                 label="Descrição"
                 required
-                :error-messages="descriptionErrors"
                 :hide-details="false"
-                @blur="$v.description.$touch()"
               />
             </v-col>
 
@@ -81,9 +88,7 @@
                 ref="gold"
                 label="Recompensa - gold"
                 required
-                :error-messages="goldErrors"
                 :hide-details="false"
-                @blur="$v.gold.$touch()"
               />
             </v-col>
 
@@ -93,9 +98,7 @@
                 ref="gold"
                 label="Recompensa - exp"
                 required
-                :error-messages="expErrors"
                 :hide-details="false"
-                @blur="$v.gold.$touch()"
               />
             </v-col>
 
@@ -105,6 +108,7 @@
                 ref="deadline"
                 label="prazo"
                 required
+                mask="##/##/####"
                 :hide-details="false"
                 appendIcon="mdi-calendar-clock"
               />
@@ -112,8 +116,8 @@
           </v-row>
 
           <div class="d-flex justify-space-around mt-2">
-              <StylizedButton color="red" v-if="tarefaSelecionada" @click="excluirTarefa" :loading="loadingItem" :disabled="loadingItem"> Excluir </StylizedButton>
-              <StylizedButton color="blue" @click="adicionarTarefa" :loading="loadingItem" :disabled="loadingItem"> {{ tarefaSelecionada ? 'Editar': 'Adicionar' }} </StylizedButton>
+              <StylizedButton color="red" v-if="tarefaSelecionada" @click="excluirTarefa" :loading="loadingTarefa" :disabled="loadingTarefa"> Excluir </StylizedButton>
+              <StylizedButton color="blue" @click="adicionarTarefa" :loading="loadingTarefa" :disabled="loadingTarefa"> {{ tarefaSelecionada ? 'Editar': 'Adicionar' }} </StylizedButton>
             </div>
             <v-btn text @click="cancelarNovaTarefa" class="my-2"> cancelar </v-btn>
           </StylizedCard>
@@ -125,22 +129,28 @@
 import { required, minLength } from 'vuelidate/lib/validators'
 import StylizedButton from './StylizedButton.vue'
 import Tarefas from '@/Api/Geral/Tarefas'
+import SelectField from './SelectField.vue'
 
 export default {
   name: 'QuestList',
   data: () => ({
-    usuarioAdmin: true,
     newTaskDialog: false,
-    form: {}
+    form: {},
+    loadingTarefa: false,
+    categorias: [
+      { value: '1', text: 'Guerreiro' },
+      { value: '2', text: 'Mago' },
+      { value: '3', text: 'Druída' },
+    ]
   }),
   
   props: {
     items: { type: Array, required: true },
     listaPrincipal: Boolean,
     loading: Boolean,
-    loadingItem: Boolean,
     tarefaSelecionada: { type: Object, default: () => {} },
   },
+
   validations: {
     title: {
       required,
@@ -160,45 +170,21 @@ export default {
     title() {
       return this.tarefaSelecionada ? 'Editar' : 'Criar'
     },
-    
-    titleErrors() {
-      const errors = []
-      if (!this.$v.title.$dirty)
-        return errors
-      !this.$v.title.minLength && errors.push('Deve ter no mínimo 5 characteres')
-      !this.$v.title.required && errors.push('Campo obrigatório.')
-      return errors
+
+    usuario () {
+      return this.$store.state.usuario.dados
     },
 
-    descriptionErrors() {
-      const errors = []
-      if (!this.$v.title.$dirty)
-        return errors
-      !this.$v.title.required && errors.push('Campo obrigatório.')
-      return errors
-    },
-
-    goldErrors() {
-      const errors = []
-      if (!this.$v.title.$dirty)
-        return errors
-      !this.$v.title.required && errors.push('Campo obrigatório.')
-      return errors
-    },
-
-    expErrors() {
-      const errors = []
-      if (!this.$v.title.$dirty)
-        return errors
-      !this.$v.title.required && errors.push('Campo obrigatório.')
-      return errors
-    },
+    usuarioAdmin () {
+      return this.usuario.admin
+    }
   },
   methods: {
     formatarData(date) {
       const dateString = new Date(date).toLocaleDateString('pt-PT')
       return dateString.slice(0, 5)
     },
+
     aboutToExpire(date) {
       const date1 = new Date(date)
       var now = new Date()
@@ -206,6 +192,7 @@ export default {
       var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24))
       return diffDays <= 1
     },
+
     getColorById(id) {
       switch (id) {
       case 1:
@@ -223,19 +210,27 @@ export default {
     excluirTarefa() {
       //
     },
+
     async adicionarTarefa() {
-      console.log(this.form)
-      this.form['id_category'] = 1
-      const resp = await Tarefas.salvar(this.form)
-      console.log(resp)
+      this.loadingTarefa = true
+      try {
+        await Tarefas.salvar(this.form)
+        this.$snackbar.showMessage({ content: 'Tarefa cadastrado com sucesso', color: 'green' })
+        this.carregarItens()
+        this.cancelarNovaTarefa()
+      } catch (err) {
+        this.$snackbar.showMessage({ content: 'Falha ao cadastrar Tarefa', color: 'error' })
+      } finally {
+        this.loadingTarefa = false
+      }
     },
+
     cancelarNovaTarefa() {
-      // this.$v.$reset()
       this.form = {}
       this.newTaskDialog = false
     }
   },
-  components: { StylizedButton }
+  components: { StylizedButton, SelectField }
 }
 </script>
 

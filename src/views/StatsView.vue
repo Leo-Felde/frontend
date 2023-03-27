@@ -21,7 +21,11 @@
           stroke-linecap="round"
           smooth
         />
-        <span v-if="semAtividade" class="no-activity-text caption">
+
+        <v-skeleton-loader v-if="loading" type="chip" class="mb-2 loading-stats" />
+        <v-progress-linear v-if="loading" indeterminate />
+
+        <span v-if="semAtividade && !loading" class="no-activity-text caption">
           Nenhuma atividade nos últimos 7 dias
         </span>
       </v-sheet>
@@ -35,6 +39,7 @@ import Usuario from '@/Api/Geral/Usuario'
 export default {
   data: () => ({
     value: [],
+    loading: true,
     label: [
       'Dom', 'Seg', 'Terc', 'Qua', 'Qui', 'Sex', 'Sab'
     ],
@@ -56,6 +61,8 @@ export default {
 
   methods: {
     async buscarAtividadeSemanal(){
+      this.loading = true
+
       const idUsuario = this.$store.state.usuario.dados.id
       const resp = await Usuario.buscarAtividadeSemanal(idUsuario)
       let atividade = resp.data.content.map(obj => obj.count)
@@ -63,6 +70,7 @@ export default {
 
       const today = new Date().getDay()
       this.label = this.dias.slice(today + 1).concat(this.dias.slice(0, today + 1))
+      this.loading = false
     }
 
     
@@ -76,4 +84,12 @@ export default {
   position: absolute
   left: 20px
   top: 100px
+
+.loading-stats
+  :deep(.v-skeleton-loader__chip)
+    width: 700px
+    height: 170px
+    border-radius: 0px
+    background: #0e0e0e22
+
 </style>

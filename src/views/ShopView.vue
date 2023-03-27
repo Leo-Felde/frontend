@@ -29,8 +29,8 @@
       </v-col>
     </v-row>
     <v-row v-else cols="12" class="ma-0 mb-3">
-      <v-col>
-        <StylizedCard light content-class="d-flex justify-center" height="50px" v-if="usuarioAdmin">
+      <v-col v-if="usuarioAdmin">
+        <StylizedCard light content-class="d-flex justify-center" height="50px">
          <v-icon large color="primary" @click="newItemDialog = true"> mdi-plus-circle </v-icon>
         </StylizedCard>
       </v-col>
@@ -90,10 +90,17 @@
             <v-btn text @click="cancelarNovoitem" class="my-2"> cancelar </v-btn>
           </StylizedCard>
     </v-dialog>
-    <ConfirmDialog ref="confirm">
+    <ConfirmDialog ref="confirmBuy">
       <div class="pa-5">
         <v-img v-if="comprandoItem.referencia" :src="require(`@/assets/character/${comprandoItem.categoria}/icon/${comprandoItem.referencia}.png`)" height="50px" contain class="self-align-center" />
-        <span class=""> Comprar {{ comprandoItem.nome }} por </span> <span class="yellow--text"> {{ comprandoItem.valor }} ouros </span>
+        <span> Comprar {{ comprandoItem.nome }} por </span> <span class="yellow--text"> {{ comprandoItem.valor }} ouros </span>
+      </div>
+    </ConfirmDialog>
+
+    <ConfirmDialog ref="cantBuy" ok-entendi>
+      <div class="pa-5">
+        <v-img v-if="comprandoItem.referencia" :src="require(`@/assets/character/${comprandoItem.categoria}/icon/${comprandoItem.referencia}.png`)" height="50px" contain class="self-align-center" />
+        <span> Você não possui dinheiro para comprar este item <span class="yellow--text"> {{ comprandoItem.valor }} ouros </span> </span>
       </div>
     </ConfirmDialog>
     </StylizedCard>
@@ -131,13 +138,16 @@ export default {
       return this.$store.state.usuario.dados
     },
 
+    usuarioAdmin () {
+      return this.usuario.admin
+    },
+
     gold () {
       return this.usuario.gold
     }
   },
     
   data: () => ({
-    usuarioAdmin: true,
     tab: 0,
     tabs: [{ title: 'cabeça', value: 'head' },{ title: 'Corpo', value: 'top' },{ title: 'pernas', value: 'bottom' }],
     itens: {
@@ -170,7 +180,15 @@ export default {
       this.comprandoItem = item
       this.showBuyDialog = true
 
-      if (!await this.$refs.confirm.open(
+      if (this.usuario.gold < item.valor) {
+        await this.$refs.cantBuy.open(
+          'Comprar item', null
+        )
+        return
+      }
+
+
+      if (!await this.$refs.confirmBuy.open(
         'Comprar item', null
       )) return
       
@@ -189,7 +207,7 @@ export default {
     async carregarItens() {
       this.loadingItens = true
       try {
-        const resp = await Itens.listar()
+        const resp = await Itens.listar(this.usuario.id)
         const todosItems = resp.data.content
 
         todosItems.forEach(item => {
@@ -215,13 +233,22 @@ export default {
     },
 
     async adicionarItem () {
-      console.log(this.form)
-      const resp = await Itens.salvar(this.form)
-      console.log(resp)
+      this.loadingItem = true
+      try {
+        await Itens.salvar(this.form)
+        this.$snackbar.showMessage({ content: 'Item cadastrado com sucesso', color: 'green' })
+        this.cancelarNovoitem()
+        this.carregarItens()
+      } catch (err) {
+        this.$snackbar.showMessage({ content: 'Falha ao cadastrar Item', color: 'error' })
+      } finally {
+        this.loadingItem = false
+      }
     },
 
     cancelarNovoitem() {
       this.newItemDialog = false
+      this.form = {}
     }
   },
 }
