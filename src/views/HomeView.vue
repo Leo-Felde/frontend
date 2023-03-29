@@ -31,14 +31,14 @@
 
     <StylizedCard black class="px-3 py-2 cardsubtitle"> Missões ativas </StylizedCard>
 
-    <QuestList :loading="loadingTasks" :items="tasks" @click="concluirTarefa">
+    <QuestList :loading="loadingTasks" :items="tasks" @click="concluirTarefa" @refresh="carregarTarefas">
       <div @click="$router.push('/tasks')" class="pointer">
       <StylizedCard v-if="!tasks.length" paper color="yellow" class="caption mb-1 pa-3">
         Não deixe o dia passar em branco! Ative tarefas agora e aumente sua produtividade.<br> Clique aqui para acessar sua lista de tarefas.
       </StylizedCard>
     </div>
     </QuestList>
-    <HabitForm v-model="showNewHabitDialog" @newHabit="carregarHabitos" @refresh="carregarTarefas" :habito="habitoSelecionado" @fechar="habitoSelecionado = {}" />
+    <HabitForm v-model="showNewHabitDialog" @newHabit="carregarHabitos" :habito="habitoSelecionado" @fechar="habitoSelecionado = {}" />
 
     <v-dialog v-model="showEditHabitDialog">
       <StylizedCard class="pa-4 card-icones pt-10" brown>

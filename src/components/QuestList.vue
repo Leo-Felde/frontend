@@ -205,7 +205,7 @@ export default {
           id_tarefa: task.id
         }
         await Tarefas.cancelarTarefa(params)
-        this.cancelarNovaTarefa(true)
+        this.$emit('refresh')
       } catch (err) {
         this.$snackbar.showMessage({ content: 'Falha ao cancelar Tarefa', color: 'error' })
       } 
