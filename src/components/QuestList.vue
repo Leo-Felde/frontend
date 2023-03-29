@@ -31,7 +31,8 @@
               <PixelIcon v-if="aboutToExpire(task.deadline)" icon="clock-alert" small />
               <PixelIcon v-else icon="clock" small />
             </span>
-            <v-btn v-if="usuarioAdmin" text small class="edit-btn" @click.stop.prevent="editarTarefa(task)">editar <v-icon> mdi-pencil-circle-outline </v-icon></v-btn>
+            <v-btn v-if="usuarioAdmin && listaPrincipal" text small class="edit-btn" @click.stop.prevent="editarTarefa(task)">editar <v-icon> mdi-pencil-circle-outline </v-icon></v-btn>
+            <v-btn v-if="!listaPrincipal" text small class="edit-btn" @click.stop.prevent="cancelarTarefa(task)"><v-icon> mdi-close </v-icon> abandonar</v-btn>
             <div class="rewards caption d-flex">
                 <span class="green--text" v-if="task.reward_exp">+{{ task.reward_exp }}xp</span>
                 <span class="orange--text ml-1 text--accent-2 d-flex" v-if="task.reward_gold"> {{ task.reward_gold }}<PixelIcon icon="coin-stack" x-small class="ml-1"/></span>
@@ -190,6 +191,24 @@ export default {
     formatarData(date) {
       const dateString = new Date(date).toLocaleDateString('pt-PT')
       return dateString.slice(0, 5)
+    },
+
+    async cancelarTarefa (task) {
+      if (!await this.$refs.confirm.open(
+        'Abandonar Tarefa',
+        'Tem certeza que deseja abandonar esta tarefa?'
+      )) return
+
+      try {
+        const params = {
+          id_usuario: this.$store.state.usuario.dados.id,
+          id_tarefa: task.id
+        }
+        await Tarefas.cancelarTarefa(params)
+        this.cancelarNovaTarefa(true)
+      } catch (err) {
+        this.$snackbar.showMessage({ content: 'Falha ao cancelar Tarefa', color: 'error' })
+      } 
     },
 
     aboutToExpire(date) {
