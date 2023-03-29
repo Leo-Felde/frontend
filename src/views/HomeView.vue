@@ -38,7 +38,7 @@
       </StylizedCard>
     </div>
     </QuestList>
-    <HabitForm v-model="showNewHabitDialog" @newHabit="carregarHabitos" :habito="habitoSelecionado" @fechar="habitoSelecionado = {}" />
+    <HabitForm v-model="showNewHabitDialog" @newHabit="carregarHabitos" @refresh="carregarTarefas" :habito="habitoSelecionado" @fechar="habitoSelecionado = {}" />
 
     <v-dialog v-model="showEditHabitDialog">
       <StylizedCard class="pa-4 card-icones pt-10" brown>
