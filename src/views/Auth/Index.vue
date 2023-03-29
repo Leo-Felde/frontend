@@ -1,5 +1,5 @@
 <template>
-  <StylizedCard brown content-class="vertical-center mx-auto pa-5" :width="this.$vuetify.breakpoint.smAndDown ? '90%' : '350px'">
+  <StylizedCard brown content-class="vertical-center mx-auto pa-5 pt-8" :width="this.$vuetify.breakpoint.smAndDown ? '90%' : '350px'">
     <StylizedCard black class="title-card px-5 py-1">
        Bem vindo
     </StylizedCard>

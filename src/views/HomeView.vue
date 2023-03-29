@@ -1,5 +1,5 @@
 <template>
-  <StylizedCard class="pa-2" brown>
+  <StylizedCard class="pa-2 pb-5" brown>
     <StylizedCard black class="px-3 py-2 cardtitle"> Hábitos </StylizedCard>
     <div class="py-2 mt-10" id="habits-container" v-if="!loadingHabits">
       <v-btn fab class="mx-2" elevation="0" @click="showNewHabitDialog = true"> 
@@ -11,11 +11,13 @@
       </v-btn>
       
       <div v-for="item in habits" :key="item.id" class="habit-container pb-12">
-        <v-btn fab class="mx-2 darken-2" elevation="0" :color="item.color" v-longclick="() => longPress(item)">
-          <v-progress-circular :value="item.value ? 100 : 0" :color="`${item.color} lighten-2`" class="habit-progress" size="60" />
-          <v-icon color="white">{{ item.icon }}</v-icon> 
-        </v-btn>
-        <span class="habit-title caption">{{ item.title }}</span>
+        <div class="mx-2">
+          <v-btn fab class="mx-auto darken-2" elevation="0" :color="item.color" v-longclick="() => longPress(item)">
+            <v-progress-circular :value="item.value ? 100 : 0" :color="`${item.color} lighten-2`" class="habit-progress" size="60" />
+            <v-icon color="white">{{ item.icon }}</v-icon> 
+          </v-btn>
+          <div class="habit-title">{{ item.title }}</div>
+        </div>
       </div>
     </div>
     <div class="loading-habits mt-10 py-2" v-else>
@@ -25,16 +27,18 @@
       <v-progress-linear indeterminate width="100%" />
     </div>
 
-    <v-divider class="mt-6 mb-10"/>
+    <v-divider class="my-9"/>
 
     <StylizedCard black class="px-3 py-2 cardsubtitle"> Missões ativas </StylizedCard>
 
     <QuestList :loading="loadingTasks" :items="tasks" @click="concluirTarefa">
-      <div v-if="!tasks.length" class="caption mb-1">
-          nenhuma tarefa ativa
-      </div>
+      <div @click="$router.push('/tasks')" class="pointer">
+      <StylizedCard v-if="!tasks.length" paper color="yellow" class="caption mb-1 pa-3">
+        Não deixe o dia passar em branco! Ative tarefas agora e aumente sua produtividade.<br> Clique aqui para acessar sua lista de tarefas.
+      </StylizedCard>
+    </div>
     </QuestList>
-    <HabitForm v-model="showNewHabitDialog" @newHabit="carregarHabitos" :habito="habitoSelecionado" />
+    <HabitForm v-model="showNewHabitDialog" @newHabit="carregarHabitos" :habito="habitoSelecionado" @fechar="habitoSelecionado = {}" />
 
     <v-dialog v-model="showEditHabitDialog">
       <StylizedCard class="pa-4 card-icones pt-10" brown>
@@ -114,7 +118,11 @@ export default {
         status: !this.tarefaSelecionada.status
       }
       await Tarefas.concluirTarefa(params)
-      await this.carregarTarefas()
+      
+
+      const index = this.tasks.findIndex(task => task.id_tarefa === tarefa.id_tarefa)
+      this.tasks.splice(index, 1)
+      // await this.carregarTarefas()
 
     },
 
@@ -161,6 +169,7 @@ export default {
     },
 
     editarHabito (habito) {
+      console.log(habito)
       this.showEditHabitDialog = false
       this.habitoSelecionado = habito
 
@@ -219,7 +228,8 @@ export default {
 <style lang="sass" scoped>
 #habits-container
   display: flex
-  min-height: 80px !important
+  min-height: 100px !important
+  max-height: 100px !important
   max-width: inherit
   overflow: hidden
   overflow-x: scroll
@@ -249,7 +259,7 @@ export default {
 
 .cardsubtitle
   position: absolute
-  top: 140px
+  top: 160px
   left: 0
   right: 0
   margin-left: auto
@@ -279,4 +289,13 @@ export default {
     width: 100%
     display: flex
     justify-content: space-between
+
+.habit-title
+  position: relative
+  top: 0px
+  font-size: 0.75rem !important
+  font-weight: 400
+  letter-spacing: 0.0333333333em !important
+  line-height: 0.7rem
+  font-family: "Roboto", sans-serif !important
 </style>

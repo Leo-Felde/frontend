@@ -5,7 +5,7 @@
       <span class="subtitle-2">
         <v-btn icon @click="$emit('logout')"> <v-icon> mdi-logout </v-icon> sair </v-btn>
         {{ usuario.nome }} lvl.{{ usuario.level }} </span>
-      <v-progress-linear :value="usuario.xp" height="10px" />
+      <v-progress-linear :value="usuario.xp" height="10px" color="light-green darken-1" />
     </div>
 
     <div id="character_wrapper">
@@ -182,14 +182,14 @@ export default {
 
     changeHair (action) {
       if (action === 'next') {
-        if (this.charHair === 21) {
+        if (this.charHair === 22) {
           this.charHair = 1
         } else {
           this.charHair += 1
         }
       } else {
         if (parseInt(this.charHair) === 1) {
-          this.charHair = 21
+          this.charHair = 22
         } else {
           this.charHair -= 1
         }
@@ -261,12 +261,12 @@ export default {
 #color-btns
   position: absolute
   top: 80px
-  left: 180px
+  left: 150px
     
 #hair
   position: absolute
   top: 80px
-  left: -5px
+  left: 0px
   z-index: 4
   &-next
     @extend #hair
@@ -275,13 +275,19 @@ export default {
     @extend #hair
     left: 8px
 
+#inventory-btn
+  position: absolute
+  top: 130px
+  left: 130px
+
 #char
   position: absolute
   z-index: 2
   top: 0px
-  left: -3px
+  left: 22px
   &-eye-whites
     @extend #char
+    left: 21px
   &-head // capacete ou chapeu
     @extend #char
     z-index: 4
@@ -294,7 +300,7 @@ export default {
 
 #canvas
   position: absolute
-  left: 0px
+  left: 25px
   top: 0px
   z-index: 2
   width: 100px
@@ -306,8 +312,6 @@ export default {
     @extend #canvas
   &-eye
     @extend #canvas
-    &-whites
-      @extend #canvas
 
 #character_wrapper
   width: 180px

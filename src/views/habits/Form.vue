@@ -1,6 +1,6 @@
 <template>
     <div>
-      <v-dialog v-model="show" fullscreen>
+      <v-dialog v-model="show" fullscreen eager>
       <StylizedCard content-class="habit-wrapper" brown>
           <StylizedCard black class="d-flex mb-1 card-title" height="50px">
             <span class="ml-5 my-auto"> Criar novo hábito </span>
@@ -69,8 +69,8 @@
           </v-row>
 
             <div class="d-flex justify-space-around mt-2">
-              <StylizedButton v-if="habito" color="red" @click="excluirHabito" :loading="loading" :disabled="loading"> Excluir </StylizedButton>
-              <StylizedButton color="blue" @click="adicionarHabito" :loading="loading" :disabled="loading"> {{ habito ? 'Editar habito': 'Adicionar habito' }} </StylizedButton>
+              <StylizedButton v-if="habito?.id" color="red" @click="excluirHabito" :loading="loading" :disabled="loading"> Excluir </StylizedButton>
+              <StylizedButton color="blue" @click="adicionarHabito" :loading="loading" :disabled="loading"> {{ habito?.id ? 'Editar habito': 'Adicionar habito' }} </StylizedButton>
             </div>
             <v-btn text @click="cancelarAdicionarHabito" class="my-2"> cancelar </v-btn>
         </StylizedCard>
@@ -128,11 +128,11 @@ export default {
     show: false,
     iconPicker: false,
     loading: false,
-    formOriginal: { color: 'red', days: [0, 1, 2, 3, 4, 5, 6]},
-    form: { color: 'red', days: [] },
+    formOriginal: { color: 'red', days: [ 0, 1, 2, 3, 4, 5, 6 ]},
+    form: { color: 'red', days: [ 0, 1, 2, 3, 4, 5, 6 ] },
     allColors: ['red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue', 'cyan', 'teal', 'green', 'light-green', 'lime', 'yellow', 'amber', 'orange', 'deep-orange', 'brown', 'blue-grey', 'grey'],
     allIcons: [
-      { id: 1, category: 'Habbies/Atividades', icons: ['mdi-weight-lifter', 'mdi-run', 'mdi-hiking', 'mdi-skateboarding', 'mdi-karate', 'mdi-meditation', 'mdi-diving', 'mdi-dance-ballroom']},
+      { id: 1, category: 'Habbies/Atividades', icons: ['mdi-weight-lifter', 'mdi-run', 'mdi-hiking', 'mdi-skateboarding', 'mdi-karate', 'mdi-meditation', 'mdi-diving', 'mdi-dance-ballroom', 'mdi-human-scooter', 'mdi-kabaddi']},
       { id: 2, category: 'Entreterimento', icons: ['mdi-television-speaker', 'mdi-television-play', 'mdi-television-speaker-off', 'mdi-video-box', 'mdi-video', 'mdi-video-off', 'mdi-video-vintage', 
         'mdi-movie-open', 'mdi-movie-open-star', 'mdi-movie-open-off', 'mdi-music', 'mdi-music-clef-treble', 'mdi-speaker-wireless'
       ]},
@@ -141,7 +141,8 @@ export default {
       { id: 4, category: 'Animais', icons: ['mdi-dog-service', 'mdi-dog-side', 'mdi-bone', 'mdi-dog', 'mdi-bird', 'mdi-cat', 'mdi-rabbit-variant', 'mdi-fish','mdi-fishbowl', 'mdi-horse', 'mdi-rodent', 'mdi-owl', 'mdi-spider-thread', 'mdi-unicorn-variant'] },
       { id: 5, category: 'Pessoas', icons: [ 'mdi-account-tie', 'mdi-account-tie-woman', 'mdi-human-greeting', 'mdi-human-male-board-poll', 'mdi-wheelchair', 'mdi-baby', 'mdi-baby-bottle-outline', 'mdi-human-baby-changing-table', 'mdi-baby-carriage', 'mdi-cradle', 'mdi-human-cane',
         'mdi-face-man', 'mdi-face-man-shimmer', 'mdi-face-woman', 'mdi-face-woman-shimmer'] },    
-      { id: 6, category: 'Médico', icons: ['mdi-clipboard-pulse', 'mdi-heart-pulse', 'mdi-pulse', 'mdi-stethoscope', 'mdi-hand-wash', 'mdi-lotion', 'mdi-brain', 'mdi-tooth', 'mdi-lungs', 'mdi-medication', 'mdi-needle', 'mdi-pill', 'mdi-emoticon-sick'] },
+      { id: 6, category: 'Saúde', icons: ['mdi-clipboard-pulse', 'mdi-heart-pulse', 'mdi-pulse', 'mdi-stethoscope', 'mdi-hand-wash', 'mdi-lotion', 'mdi-brain', 'mdi-tooth', 'mdi-lungs', 'mdi-medication', 'mdi-needle', 'mdi-pill', 'mdi-emoticon-sick'] },
+      { id: 7, category: 'Comida', icons: ['mdi-baguette', 'mdi-cup', 'mdi-cup-off', 'mdi-cup-water', 'mdi-blender', 'mdi-bottle-soda', 'mdi-bottle-wine', 'mdi-bowl-mix', 'mdi-bread-slice', 'mdi-cake-variant', 'mdi-cake-layered', 'mdi-candy', 'mdi-carrot', 'mdi-cheese', 'mdi-coffee', 'mdi-coffee-maker', 'mdi-coffee-off', 'mdi-food', 'mdi-food-apple'] },
     ],
     dias: [
       {id: 'domingo', text: 'Domingo', value: true},
@@ -196,18 +197,15 @@ export default {
       this.$emit('input', this.show)
       if (!this.habito) {
         this.form = cloneDeep(this.formOriginal)
+      } else {
+        const options = cloneDeep(this.habito)
+        options.days = JSON.parse(options.days)
+        this.form = options
       }
-    },
-
-    habito () {
-      this.form = this.habito
     }
   },
 
   async mounted () {
-    // if (this.id) {
-    //   await this.carregarHabito()
-    // }
     this.$v.$reset()
     this.form = cloneDeep(this.formOriginal)
   },
@@ -217,6 +215,7 @@ export default {
       this.$v.$reset()
       this.form = cloneDeep(this.formOriginal)
       this.show = false
+      this.$emit('fechar')
     },
 
     async adicionarHabito () {
@@ -230,10 +229,10 @@ export default {
         params.id_usuario = this.$store.state.usuario.dados.id
         await Habitos.salvar(params)
         this.$emit('newHabit')
-        this.show = false
-        this.$snackbar.showMessage({ content: 'Hábito cadastrado com sucesso', color: 'green' })
+        this.cancelarAdicionarHabito()
+        this.$snackbar.showMessage({ content: `Hábito ${ this.form.id ? 'editado' : 'cadastrado'} com sucesso`, color: 'green' })
       } catch (err) {
-        this.$snackbar.showMessage({ content: 'Falha ao cadastrar Hábito', color: 'error' })
+        this.$snackbar.showMessage({ content: `Falha ao ${ this.form.id ? 'editar' : 'cadastrar'} Hábito`, color: 'error' })
       } finally {
         this.loading = false
       }
@@ -250,7 +249,7 @@ export default {
         await Habitos.excluir(this.form.id)
 
         this.$emit('newHabit')
-        this.show = false
+        this.cancelarAdicionarHabito()
         this.$snackbar.showMessage({ content: 'Hábito excluído com sucesso', color: 'green' })
       } catch (err) {
         this.$snackbar.showMessage({ content: 'Falha ao excluir Hábito', color: 'error' })

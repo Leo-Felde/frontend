@@ -37,12 +37,13 @@
 
       <v-col cols="4" v-for="i in 12" :key="`inv-${i}`" @click="currentTabItems[i - 1] ? BuyDialog(currentTabItems[i - 1]) : null" :class="{'pointer': currentTabItems[i - 1]}">
         <StylizedCard light content-class="d-flex" height="50px">
+          <v-btn v-if="currentTabItems[i - 1] && usuarioAdmin" fab x-small color="primary" class="edit-btn white--text" @click.stop.prevent="editarItem(currentTabItems[i - 1])"> <v-icon> mdi-pencil-circle-outline </v-icon></v-btn>
           <v-img v-if="currentTabItems[i - 1]" :src="require(`@/assets/character/${tabs[tab].value}/icon/${currentTabItems[i - 1].referencia}.png`)" height="30px" contain class="self-align-center" />
         </StylizedCard>
       </v-col>
     </v-row>
 
-    <v-dialog v-model="newItemDialog" max-width="400px">
+    <v-dialog v-model="newItemDialog" max-width="400px" eager>
       <StylizedCard content-class="habit-wrapper" brown>
           <StylizedCard black class="d-flex mb-1 card-title" height="50px">
             <span class="ml-5 my-auto"> {{ title }} item </span>
@@ -84,12 +85,14 @@
             </v-col>
           </v-row>
           <div class="d-flex justify-space-around mt-4">
-              <StylizedButton color="red" v-if="itemSelecionado" @click="excluiritem" :loading="loadingItem" :disabled="loadingItem"> Excluir </StylizedButton>
-              <StylizedButton color="blue" @click="adicionarItem" :loading="loadingItem" :disabled="loadingItem">{{ itemSelecionado ? 'Editar': 'Adicionar' }} </StylizedButton>
+              <StylizedButton color="red" v-if="form.id" @click="excluirItem" :loading="loadingItem" :disabled="loadingItem"> Excluir </StylizedButton>
+              <StylizedButton color="blue" @click="adicionarItem" :loading="loadingItem" :disabled="loadingItem">{{ form.id ? 'Editar': 'Adicionar' }} </StylizedButton>
             </div>
             <v-btn text @click="cancelarNovoitem" class="my-2"> cancelar </v-btn>
           </StylizedCard>
     </v-dialog>
+    <ConfirmDialog ref="confirm" />
+
     <ConfirmDialog ref="confirmBuy">
       <div class="pa-5">
         <v-img v-if="comprandoItem.referencia" :src="require(`@/assets/character/${comprandoItem.categoria}/icon/${comprandoItem.referencia}.png`)" height="50px" contain class="self-align-center" />
@@ -108,6 +111,7 @@
   
 <script>
 // @ is an alias to /src
+import { cloneDeep } from 'lodash-es'
 
 import Itens from '@/Api/Geral/Itens'
 import Usuario from '@/Api/Geral/Usuario'
@@ -140,10 +144,6 @@ export default {
 
     usuarioAdmin () {
       return this.usuario.admin
-    },
-
-    gold () {
-      return this.usuario.gold
     }
   },
     
@@ -151,11 +151,11 @@ export default {
     tab: 0,
     tabs: [{ title: 'cabeça', value: 'head' },{ title: 'Corpo', value: 'top' },{ title: 'pernas', value: 'bottom' }],
     itens: {
-      head: [ 'gladiator', 'wizards-hat', 'templar', 'fox-mask'],
-      top: ['gladiator', 'templar', 'red-armor', 'tuxedo', 'red-jacket'],
-      bottom: ['gladiator', 'templar', 'wills']
+      head: [],
+      top: [],
+      bottom: []
     },
-    loadingItens: false,
+    loadingItens: true,
     items: {
       head: [],
       top: [],
@@ -164,15 +164,17 @@ export default {
     form: {},
     itemSelecionado: null,
     newItemDialog: false,
-    loading: false,
+    loading: true,
     loadingItem: false,
     comprandoItem: {},
-    showBuyDialog: false
+    showBuyDialog: false,
+    gold: 0
   }),
 
   async mounted () {
     await this.carregarUsuario()
     await this.carregarItens()
+    this.gold = this.usuario.gold
   },
 
   methods: {
@@ -180,7 +182,7 @@ export default {
       this.comprandoItem = item
       this.showBuyDialog = true
 
-      if (this.usuario.gold < item.valor) {
+      if (this.gold < item.valor) {
         await this.$refs.cantBuy.open(
           'Comprar item', null
         )
@@ -199,17 +201,25 @@ export default {
 
       try {
         await Usuario.comprarItem(options)
+
+        this.carregarItens()
+        this.gold = this.gold - item.valor
       } catch (err) {
         this.$snackbar.showMessage({ content: 'Falha ao comprar item', color: 'error' })
       }
     },
 
     async carregarItens() {
+      this.items = {
+        head: [],
+        top: [],
+        bottom: []
+      }
+
       this.loadingItens = true
       try {
         const resp = await Itens.listar(this.usuario.id)
         const todosItems = resp.data.content
-
         todosItems.forEach(item => {
           this.items[item.categoria].push(item)
         })
@@ -232,23 +242,51 @@ export default {
       }
     },
 
+    async excluirItem() {
+      if (!await this.$refs.confirm.open(
+        'Excluir Item',
+        'Tem certeza que deseja excluir este Item?'
+      )) return
+
+      try {
+        this.loadingExcluirTarefa = true
+        await Itens.excluir(this.form.id)
+        this.$snackbar.showMessage({ content: 'Item exluido com sucesso', color: 'green' })
+        this.cancelarNovoitem(true)
+        this.carregarItens()
+      } catch (err) {
+        this.$snackbar.showMessage({ content: 'Falha ao excluir Item', color: 'error' })
+      } finally {
+        this.loadingExcluirTarefa = false
+      }
+    },
+
+    editarItem (item) {
+      const options = cloneDeep(item)
+      options.value = String(options.value)
+
+      this.form = cloneDeep(options)
+      
+      this.newItemDialog = true
+    },
+
     async adicionarItem () {
       this.loadingItem = true
       try {
         await Itens.salvar(this.form)
-        this.$snackbar.showMessage({ content: 'Item cadastrado com sucesso', color: 'green' })
+        this.$snackbar.showMessage({ content: `Item ${this.form.id ? 'editado' : 'cadastrado'} com sucesso`, color: 'green' })
         this.cancelarNovoitem()
         this.carregarItens()
       } catch (err) {
-        this.$snackbar.showMessage({ content: 'Falha ao cadastrar Item', color: 'error' })
+        this.$snackbar.showMessage({ content:  `Falha ao ${this.form.id ? 'editar' : 'cadastrar'} Tarefa`, color: 'error' })
       } finally {
         this.loadingItem = false
       }
     },
 
     cancelarNovoitem() {
-      this.newItemDialog = false
       this.form = {}
+      this.newItemDialog = false
     }
   },
 }
@@ -271,6 +309,9 @@ export default {
     height: 50px
     border-radius: 10%
 
-
+.edit-btn
+  position: absolute
+  right: -10px
+  bottom: -10px
 </style>
   

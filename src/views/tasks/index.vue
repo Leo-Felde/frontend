@@ -20,9 +20,9 @@
       
 
       <v-divider class="my-4"/>
-      <div class="quests__wrapper">
-        <QuestList :loading="loadingTasks" :items="currentTabTasks" @click="vincularTarefa" listaPrincipal/>
-      </div>
+
+      <QuestList :loading="loadingTasks" :items="currentTabTasks" @click="vincularTarefa" listaPrincipal @refresh="carregarTarefas" />
+
 
       <!-- <v-expansion-panels class="elevation-0 px-2 py-3">
             <StylizedCard brown-light width="100%">
@@ -122,9 +122,15 @@ export default {
         id_tarefa: task.id,
         status: false
       }
-      const resp = await Tarefas.vincularTarefa(params)
-      console.log(resp)
-      
+      try {
+        await Tarefas.vincularTarefa(params)
+        const index = this.tasks.findIndex(t => t.id_tarefa === task.id_tarefa)
+        this.tasks.splice(index, 1)
+        const indexTab = this.currentTabTasks.findIndex(t => t.id_tarefa === task.id_tarefa)
+        this.currentTabTasks.splice(indexTab, 1)
+      } catch (err) {
+        this.$snackbar.showMessage({ content: 'Falha ao vincular Tarefa', color: 'error' })
+      }
     },
 
     filterTasks() {
@@ -138,9 +144,6 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.wrapper
-  height: 100%
-  max-height: calc(100% - 50px)
 .cardtitle
   position: absolute
   top: -18px

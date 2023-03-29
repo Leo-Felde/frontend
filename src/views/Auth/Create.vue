@@ -167,6 +167,8 @@ export default {
     },
   
     async submit () {
+      if (this.loading) return
+      this.errMessage = null
       this.$v.$touch()
       if (this.$v.$anyError) return
 
@@ -179,10 +181,7 @@ export default {
         }
 
         const resp = await Auth.cadastro(params)
-        console.log(resp)
-        console.log(resp.data.statusCode)
-        console.log(resp.data.statusCode !== 201)
-        this.errMessage = null
+
         if (resp.data.statusCode !== 200 && resp.data.statusCode !== 201) {
           this.errMessage = Object.values(resp.data.content)
           return

@@ -13,6 +13,10 @@ const methods = {
   carregar (id) {
     return api.get(`${prefix}/carregar/${id}`)
   },
+
+  excluir (id) {
+    return api.delete(`${prefix}/excluir/${id}`)
+  },
   
   concluirTarefa (params) {
     return api.post(`${prefix}/concluirTarefa`, params)
