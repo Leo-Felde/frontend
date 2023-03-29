@@ -4,8 +4,8 @@ import Cookies from 'js-cookie'
 let cancel
 
 const instance = axios.create({
-  baseURL: 'http://192.168.0.109:8000/api',
-  headers: {
+  baseURL: 'http://127.0.0.1:8000/api',
+  headers: {  
     'Content-Type': 'application/json',
   },
   validateStatus: function (status) {

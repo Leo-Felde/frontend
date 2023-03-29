@@ -22,6 +22,10 @@ const methods = {
     return api.post(`${prefix}/concluirTarefa`, params)
   },
 
+  cancelarTarefa (params) {
+    return api.post(`${prefix}/cancelarTarefa`, params)
+  },
+
   vincularTarefa (params) {
     return api.post(`${prefix}/vincularTarefa`, params)
   }
